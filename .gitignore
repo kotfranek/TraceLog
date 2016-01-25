@@ -4,6 +4,9 @@
 *.o
 *.obj
 
+# Dependency
+*.d
+
 # Precompiled Headers
 *.gch
 *.pch
@@ -26,3 +29,12 @@
 *.exe
 *.out
 *.app
+
+# IDEs
+*.kdev*
+
+# Logs
+*.log
+
+# Executables
+bin/*
