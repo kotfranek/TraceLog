@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <stdint.h>
 
-namespace log
+namespace trace
 {
     /**
      * Possible Log Levels. 

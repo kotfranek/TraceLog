@@ -28,6 +28,7 @@
 
 #include "log/UdpBackEnd.h"
 #include "log/LogEntry.h"
+#include "net/Datagram.h"
 
 #include <errno.h>
 #include <string.h>
@@ -42,18 +43,14 @@ namespace
 {
     /* Backend name */
     const ::std::string LOG_BACKEND_NAME( "UDP" ); 
-    
-    /* Invalid Socket Id */
-    const int32_t SOCKET_INVALID = -1;
 }
 
-namespace log
+namespace trace
 {
 
 UdpBackEnd::UdpBackEnd()
     : ILogBackEnd()
-    , m_socketId( SOCKET_INVALID )
-    , m_info( NULL )
+    , m_socket()
 {
 
 }
@@ -61,32 +58,20 @@ UdpBackEnd::UdpBackEnd()
 
 void UdpBackEnd::onRegister()
 {
-    const char* hostname=0; /* localhost */
-    const char* portname="6871";
-    struct addrinfo hints;
-    memset(&hints,0,sizeof(hints));
-    hints.ai_family=0;
-    hints.ai_socktype=SOCK_DGRAM;
-    hints.ai_protocol=0;
-    hints.ai_flags=AI_PASSIVE | AI_ADDRCONFIG;
-
-    int err=getaddrinfo(hostname,portname,&hints,&m_info);
-    if (err!=0) {
-        ::std::cout << "ERROR: " << err << ::std::endl;
-    }
-    else
+    ::std::cout << "SOCK..." << ::std::endl;
+    
+    if ( m_socket.open( 6871 ) )
     {
-        int fd=socket(m_info->ai_family,m_info->ai_socktype,m_info->ai_protocol);
-        if (fd==-1) 
+        m_socket.setTimeouts( 5000U, 5000U );
+        ::net::Datagram d;
+        if ( m_socket.receive( d ) )
         {
-           ::std::cout << "ERROR: " << strerror(errno) << ::std::endl;
-        }  
-        else
-        {
-            m_socketId = fd;
-            send( "onRegister" );
+            ::std::cout << "From: " << d.getAddress().getIp() << ":" << d.getAddress().getPort() << " " << d.getData()[ 0 ] << ::std::endl;
         }
-    }        
+        
+        ::net::Datagram s( ::net::Address( 6872, "127.0.0.1" ) );
+        m_socket.send( s );
+    }       
 }
 
 
@@ -100,19 +85,6 @@ bool UdpBackEnd::send( const std::string& text )
 {
     bool result = false;
     
-    if ( ::SOCKET_INVALID != m_socketId )
-    {        
-        if (sendto(m_socketId,text.c_str(),text.length(),0,
-            m_info->ai_addr,m_info->ai_addrlen)==-1) 
-        {
-            ::std::cout << "ERROR: " << strerror(errno) << ::std::endl;
-        }     
-        else
-        {
-            result = true;
-        }        
-    }
-    
     return result;
 }
 
@@ -120,11 +92,7 @@ bool UdpBackEnd::send( const std::string& text )
 
 void UdpBackEnd::onShutdown()
 {
-    if ( ::SOCKET_INVALID != m_socketId )
-    {
-        send( "onShutdown" );
-        ::close( m_socketId );
-    }
+    send( "onShutdown" );
 }
 
 
@@ -139,4 +107,4 @@ UdpBackEnd::~UdpBackEnd()
 
 }
 
-}; // namespace log
+}; // namespace trace

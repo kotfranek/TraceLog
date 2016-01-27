@@ -36,7 +36,7 @@
 #include "log/LogEntry.h"
 #include "sys/AbstractThread.h"
 
-namespace log
+namespace trace
 {
 class ILogBackEnd;
 class TraceSharedContainer;
@@ -80,6 +80,6 @@ private:
     LogEntry m_entries[ LOG_CACHE_SIZE ];    
 };
 
-}; // namespace log
+}; // 
 
 #endif // LOGPERSISTTHREAD_H

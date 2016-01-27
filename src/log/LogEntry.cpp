@@ -27,41 +27,41 @@
 
 namespace
 {
-    char traceLevelToChar( const ::log::LogLevel level )
+    char traceLevelToChar( const ::trace::LogLevel level )
     {
         char result = 'x';
         
         switch( level )
         {
-            case ::log::LogLevel_Info:
+            case ::trace::LogLevel_Info:
                 result = 'I';
                 break;
                 
-            case ::log::LogLevel_Debug:
+            case ::trace::LogLevel_Debug:
                 result = 'D';
                 break;
                 
-            case ::log::LogLevel_Warning:
+            case ::trace::LogLevel_Warning:
                 result = 'W';
                 break;
                 
-            case ::log::LogLevel_Error:
+            case ::trace::LogLevel_Error:
                 result = 'E';
                 break;
                 
-            case ::log::LogLevel_Fatal:
+            case ::trace::LogLevel_Fatal:
                 result = 'F';
                 break;
                 
-            case ::log::LogLevel_Assert:
+            case ::trace::LogLevel_Assert:
                 result = 'A';
                 break;                
                                 
-            case ::log::LogLevel_Internal:
+            case ::trace::LogLevel_Internal:
                 result = 'L';
                 break;
                                 
-            case ::log::LogLevel_Developer:
+            case ::trace::LogLevel_Developer:
                 result = 'T';
                 break;                
             
@@ -109,7 +109,7 @@ namespace
     }
 }
 
-namespace log
+namespace trace
 {
     
 size_t LogEntry::Data::serialize( uint8_t* output ) const

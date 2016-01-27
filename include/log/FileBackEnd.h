@@ -27,7 +27,7 @@
 #include "log/LogDefines.h"
 #include "log/LogEntry.h"
 
-namespace log
+namespace trace
 {
 
 class FileBackEnd : public ILogBackEnd

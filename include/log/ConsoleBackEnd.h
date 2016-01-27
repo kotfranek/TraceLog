@@ -31,7 +31,7 @@
 
 #include "ILogBackEnd.h"
 
-namespace log
+namespace trace
 {
 
     /**

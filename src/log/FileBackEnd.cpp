@@ -31,7 +31,7 @@ namespace
         ::std::ios_base::in | ::std::ios_base::out | ::std::ios_base::binary | ::std::ios_base::trunc;        
         
     /* Maximal Single log Entry binary representation length */
-    const size_t MAX_LOG_ENTRY_STREAM_SIZE = sizeof( ::log::LogEntry::Data );
+    const size_t MAX_LOG_ENTRY_STREAM_SIZE = sizeof( ::trace::LogEntry::Data );
     
     /* Static buffer, accessed always with mutex, so this is safe */
     uint8_t ENTRY_BUFFER[ MAX_LOG_ENTRY_STREAM_SIZE ] = {};
@@ -43,10 +43,10 @@ namespace
     const ::std::string LOG_BACKEND_NAME( "File" );
     
     /* Console backend used for Error tracing */
-    ::log::ConsoleBackEnd S_BE_CONSOLE;
+    ::trace::ConsoleBackEnd S_BE_CONSOLE;
 };
 
-namespace log
+namespace trace
 {
 
 FileBackEnd::FileBackEnd()
@@ -106,7 +106,7 @@ const ::std::string& FileBackEnd::getName() const
 
 void FileBackEnd::persistEntries()
 {
-    //::sys::StopWatch stWatch( true );
+    ::sys::StopWatch stWatch( true );
 
     if ( m_file.is_open() && 0U != m_index )
     {
@@ -119,7 +119,7 @@ void FileBackEnd::persistEntries()
         }
     }
        
-    //::std::cout << "persistEntries("<< m_index <<")-> took [" << sw.stop() << "] us" << std::endl;
+    ::std::cout << "persistEntries("<< m_index <<")-> took [" << stWatch.stop() << "] us" << std::endl;
 }
 
 

@@ -20,7 +20,7 @@
 
 #include <string>
 
-namespace log
+namespace trace
 {
     class LogEntry;
     
@@ -42,7 +42,7 @@ namespace log
         * @arg entry
         * @result true, on successful entry inhibit
         */
-        virtual bool add( const ::log::LogEntry& entry ) = 0;
+        virtual bool add( const ::trace::LogEntry& entry ) = 0;
         
         
         /**

@@ -32,7 +32,7 @@
 typedef ::std::lock_guard<std::mutex> TLockMutex;
 typedef ::std::unique_lock<std::mutex> TLockUnique;
 
-namespace log
+namespace trace
 {
 
 TraceSharedContainer::TraceSharedContainer()

@@ -65,7 +65,7 @@ private:
         
         //LOG_ASSERT( false, "poop!" );
         
-        waitForSignal( 1500U );
+        waitForSignal( 15000U );
         
         for ( size_t i = 0U; i < NUM_TH; i++ )
         {
@@ -81,12 +81,12 @@ private:
     }
 };
 
-::log::UdpBackEnd S_UDP_BACKEND;
+::trace::UdpBackEnd S_UDP_BACKEND;
 
 int32_t main( int argc, const char * const * argv )
 {
-    LOGGER_INIT_BE_CONSOLE;
-    //LOGGER_SET_BACKEND( &S_UDP_BACKEND ); 
+    //LOGGER_INIT_BE_FILE;
+    LOGGER_SET_BACKEND( &S_UDP_BACKEND ); 
     
     LOG_INFO_C( "App Started: %c", 'a' );
     int32_t result = ::DemoApp().run( argc, argv );

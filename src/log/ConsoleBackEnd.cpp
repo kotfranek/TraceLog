@@ -38,7 +38,7 @@ namespace
     const ::std::string LOG_BACKEND_NAME( "Console" );    
 }
 
-namespace log
+namespace trace
 {
 
 ConsoleBackEnd::ConsoleBackEnd()

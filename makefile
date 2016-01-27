@@ -1,6 +1,6 @@
 TARGET = libtracelog
 OUTDIR = lib
-LIBS = -lesys -ltracelog
+LIBS = -ltracelog -lesys
 CC = g++
 INCLUDES = include ../ESys/include
 LIBDIRS = lib/ ../ESys/lib

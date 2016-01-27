@@ -37,11 +37,11 @@ namespace
      */
     inline size_t safeIncrement( const size_t& value )
     {
-        return ( value + 1U ) % ::log::LOG_CACHE_SIZE;        
+        return ( value + 1U ) % ::trace::LOG_CACHE_SIZE;        
     }
 }
 
-namespace log
+namespace trace
 {
 
 TraceBuffer::TraceBuffer()
@@ -101,4 +101,4 @@ TraceBuffer::~TraceBuffer()
 }
 
 
-}; // namespace log
+}; // 

@@ -49,7 +49,7 @@ namespace
     }
 };
 
-namespace log
+namespace trace
 {
    
 LogPersistThread::LogPersistThread ( TraceSharedContainer& traceContainer )

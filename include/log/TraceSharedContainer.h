@@ -36,7 +36,7 @@
 #include <mutex>
 #include <condition_variable>
 
-namespace log
+namespace trace
 {
 
 class TraceSharedContainer
@@ -78,6 +78,6 @@ private:
     TraceBuffer m_buffer;
 };
 
-} // namespace log
+} // 
 
 #endif // TRACESHAREDCONTAINER_H

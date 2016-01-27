@@ -23,7 +23,7 @@
 
 #include "LogDefines.h"
 
-namespace log
+namespace trace
 {
     class LogEntry
     {

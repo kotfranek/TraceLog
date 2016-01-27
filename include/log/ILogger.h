@@ -23,43 +23,32 @@
  *
  */
 
-#ifndef LOGGER_H
-#define LOGGER_H
+#ifndef ILOGGER_H
+#define ILOGGER_H
 
-#include <stdint.h>
-#include <mutex>
 #include <string>
-#include <ostream>
+
 #include "log/LogDefines.h"
-#include "log/ILogger.h"
-#include "log/LogEntry.h"
-#include "log/TraceSharedContainer.h"
-#include "log/LogPersistThread.h"
 
 namespace trace
 {       
     class ILogBackEnd;
         
-    class Logger : public ILogger
+    class ILogger
     {        
-    public:
-        Logger();
-        virtual ~Logger();
-
-    private: 
-        
+    public:        
         /**
          * Log a single string
          * @arg level 
          * @arg message
          */
-        virtual void log( const LogLevel level, const ::std::string& message );
+        virtual void log( const LogLevel level, const ::std::string& message ) = 0;
         
         
         /**
          * Log a formatted C-string
          */
-        virtual void logV( const LogLevel level, const char * format, ... );
+        virtual void logV( const LogLevel level, const char * format, ... ) = 0;
         
         
         /**
@@ -68,44 +57,38 @@ namespace trace
          * @arg format Format C-string
          * @arg ... variable arguments
          */
-        virtual void log( const LogLevel level, const char* message );
+        virtual void log( const LogLevel level, const char* message ) = 0;
         
         
         /**
          * Execute an assertion and log the provided text
          */
-        virtual void assert( const char* fileName, const uint32_t line, const char* message );
+        virtual void assert( const char* fileName, const uint32_t line, const char* message ) = 0;
               
         
         /**
          * Set the backend implementation 
          * @arg backEnd Valid implementation
          */
-        virtual void setBackEnd( ILogBackEnd* backEnd );
+        virtual void setBackEnd( ILogBackEnd* backEnd ) = 0;
         
         
         /**
          * Close the log, clean the resources, notify the BackEnd
          */
-        virtual void shutDown();
-   
+        virtual void shutDown() = 0;
 
-        Logger(const Logger& other);    
-        Logger& operator=(const Logger& other);
+    protected:
+        ILogger()
+        {
+        };
         
-        /* Thread safety access mutex */
-        ::std::mutex m_mutex;           
+        virtual ~ILogger()
+        {
+        };
         
-        /* Trace Entry buffer */
-        TraceSharedContainer m_buffer;  
-        
-        /* Log data persist thread */
-        LogPersistThread m_persistThread;
-               
-        /* Log backend */
-        ILogBackEnd* m_backEnd;
     };
 
 };
 
-#endif // LOGGER_H
+#endif // ILOGGER_H

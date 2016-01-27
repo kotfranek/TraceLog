@@ -32,7 +32,7 @@
 #include "LogDefines.h"
 #include "LogEntry.h"
 
-namespace log
+namespace trace
 {
 
 /**
@@ -80,6 +80,6 @@ private:
     size_t m_readPtr;
 };
 
-}; // namespace log
+}; // 
 
 #endif // TRACEBUFFER_H
