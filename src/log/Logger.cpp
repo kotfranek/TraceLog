@@ -25,6 +25,7 @@
 
 #include "log/Logger.h"
 #include "log/ILogBackEnd.h"
+#include "sys/ESysDefs.h"
 
 #include <cstdarg>
 #include <cstdio>
@@ -33,7 +34,7 @@
 
 namespace trace 
 {
-typedef ::std::lock_guard<std::mutex> TLockMutex;
+
         
 Logger::Logger()
     : m_mutex()
@@ -47,7 +48,7 @@ Logger::Logger()
 
 void Logger::setBackEnd( ILogBackEnd* backEnd )
 {
-    TLockMutex l( m_mutex );
+    ::sys::TLockMutex l( m_mutex );
     
     if ( NULL == m_backEnd )
     {
@@ -90,7 +91,7 @@ void Logger::log( const LogLevel level, const char* message )
 
 void Logger::shutDown()
 {
-    TLockMutex l( m_mutex );
+    ::sys::TLockMutex l( m_mutex );
     
     if ( NULL != m_backEnd )
     {

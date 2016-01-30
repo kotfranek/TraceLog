@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, <copyright holder> <email>
+ * Copyright (c) 2016, Przemysław Podwapiński <p.podwapinski@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,14 +9,11 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- *     * Neither the name of the <organization> nor the
- *     names of its contributors may be used to endorse or promote products
- *     derived from this software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY <copyright holder> <email> ''AS IS'' AND ANY
+ * THIS SOFTWARE IS PROVIDED BY Przemysław Podwapiński ''AS IS'' AND ANY
  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL <copyright holder> <email> BE LIABLE FOR ANY
+ * DISCLAIMED. IN NO EVENT SHALL Przemysław Podwapiński BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
@@ -43,6 +40,18 @@ namespace
 {
     /* Backend name */
     const ::std::string LOG_BACKEND_NAME( "UDP" ); 
+    
+    /* UDP Client identification */
+    const ::std::string UDP_CLIENT_HANDSHAKE( "TRACELOG-CLIENT-XO-XO\n" );
+    
+    /* UDP Wait-For-Receive Timeout in ms */
+    const uint32_t UDP_RECIEVE_TIMEOUT_MS = 1500U;
+    
+    /* UDP Wait-For-Send Timeout in ms */
+    const uint32_t UDP_SEND_TIMEOUT_MS = 50U;    
+    
+    /* Server Receive Port */
+    const uint16_t UDP_LISTEN_PORT = 55555U;
 }
 
 namespace trace
@@ -51,26 +60,18 @@ namespace trace
 UdpBackEnd::UdpBackEnd()
     : ILogBackEnd()
     , m_socket()
+    , m_mediator( m_socket )
 {
 
 }
 
 
 void UdpBackEnd::onRegister()
-{
-    ::std::cout << "SOCK..." << ::std::endl;
-    
-    if ( m_socket.open( 6871 ) )
-    {
-        m_socket.setTimeouts( 5000U, 5000U );
-        ::net::Datagram d;
-        if ( m_socket.receive( d ) )
-        {
-            ::std::cout << "From: " << d.getAddress().getIp() << ":" << d.getAddress().getPort() << " " << d.getData()[ 0 ] << ::std::endl;
-        }
-        
-        ::net::Datagram s( ::net::Address( 6872, "127.0.0.1" ) );
-        m_socket.send( s );
+{         
+    if ( m_socket.open( UDP_LISTEN_PORT ) )
+    {        
+        m_socket.setTimeouts( UDP_SEND_TIMEOUT_MS, UDP_RECIEVE_TIMEOUT_MS );       
+        m_mediator.start();                      
     }       
 }
 
@@ -83,9 +84,10 @@ bool UdpBackEnd::add( const LogEntry& entry )
 
 bool UdpBackEnd::send( const std::string& text )
 {
-    bool result = false;
-    
-    return result;
+    ::net::Datagram d;
+    d.setContent( text );
+ 
+    return m_mediator.send( d );    
 }
 
 
@@ -93,6 +95,12 @@ bool UdpBackEnd::send( const std::string& text )
 void UdpBackEnd::onShutdown()
 {
     send( "onShutdown" );
+    
+    ::std::cout << "onShutdown" << ::std::endl;
+    m_mediator.requestStop();
+    m_mediator.join();
+    
+    m_socket.close();
 }
 
 

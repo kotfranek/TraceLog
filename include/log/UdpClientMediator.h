@@ -23,58 +23,63 @@
  *
  */
 
-#ifndef UDPBACKEND_H
-#define UDPBACKEND_H
+#ifndef UDPCLIENTMEDIATOR_H
+#define UDPCLIENTMEDIATOR_H
 
-#include "ILogBackEnd.h"
-#include "log/UdpClientMediator.h"
-#include "net/UdpSocket.h"
+#include "sys/AbstractThread.h"
+
+namespace net
+{
+    class UdpSocket;
+    class Datagram;
+}
 
 namespace trace
 {
 
-    class UdpBackEnd : public ILogBackEnd
+    class UdpClientMediator : public ::sys::AbstractThread
     {
     public:
-        UdpBackEnd();
-        ~UdpBackEnd();
+        enum MediatorState
+        {
+            Mediator_Waiting,
+            Mediator_Connected,
+            Mediator_Disconnected,
+        };
+        
+        explicit UdpClientMediator( ::net::UdpSocket& socket );
+        virtual ~UdpClientMediator();
         
         /**
-        * @see ILogBackEnd
-        */
-        virtual bool add( const LogEntry& entry );
-
-        /**
-        * @see ILogBackEnd
-        */
-        virtual void onRegister();
-        
-        /**
-        * @see ILogBackEnd
-        */    
-        virtual void onShutdown();
-        
-        /**
-        * @see ILogBackEnd
-        */      
-        virtual const ::std::string& getName() const;        
+         * Send if possible 
+         * @arg datagram
+         */
+        bool send( const ::net::Datagram& datagram );
         
     private:
-        UdpBackEnd& operator=(const UdpBackEnd& other); 
-        UdpBackEnd(const UdpBackEnd& other);
+        /* Prohibit copying */
+        UdpClientMediator& operator=(const UdpClientMediator& other);        
+        UdpClientMediator(const UdpClientMediator& other);
         
         /**
-         * Send text via the UDP Socket
+        * @see ::sys::AbstractThread
+        */
+        virtual void run();
+        
+        /** 
+         * Try to read a single UDP datagram and check if it originates 
+         * from the Trace Client Application 
+         * @result true on success
          */
-        bool send( const ::std::string& text );
+        bool waitForClient( ::net::Datagram& auxiliary, const ::std::string& handshake );
         
-        /* UDP Socket */
-        ::net::UdpSocket m_socket; 
+        /* Socket instance */
+        ::net::UdpSocket& m_socket;
         
-        /* Connection Mediator */
-        ::trace::UdpClientMediator m_mediator;
+        /* Internal state */
+        MediatorState m_state;
     };
 
 }; // namespace trace
 
-#endif // UDPBACKEND_H
+#endif // UDPCLIENTMEDIATOR_H
