@@ -35,10 +35,10 @@ namespace
     const ::std::string UDP_CLIENT_HANDSHAKE( "TRACELOG-CLIENT-HELLO" );  
     
     /* UDP Client Disconnect */
-    const ::std::string UDP_CLIENT_CLOSE( "TRACELOG-CLIENT-CLOSE\n" );     
+    const ::std::string UDP_CLIENT_CLOSE( "TRACELOG-CLIENT-CLOSE" );     
     
     /* UDP Client Present */
-    const ::std::string UDP_CLIENT_PRESENT( "TRACELOG-CLIENT-PRESENT\n" );     
+    const ::std::string UDP_CLIENT_PRESENT( "TRACELOG-CLIENT-PRESENT" );     
     
     /* UDP Server identification */
     const ::std::string UDP_SERVER_ID( "TRACELOG-SRV-HELLO" );
@@ -101,10 +101,10 @@ void UdpClientMediator::run()
                     // Client present message received. Store the timestamp.
                 }
                 
-                if ( waitForClient( fromClient, ::UDP_CLIENT_CLOSE ) )
+                /*if ( waitForClient( fromClient, ::UDP_CLIENT_CLOSE ) )
                 {
                     m_state = Mediator_Disconnected;
-                }
+                }*/
                 break;
             }
             
