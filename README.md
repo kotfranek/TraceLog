@@ -11,6 +11,7 @@ Lightweight Logging/Tracing utility
 - milliseconds based timestamping
 - output to file, console or via UDP
 - ready for custom output backend
+- support for the assertion mechanism with file name and line number
 - Java UDP log-viewer available soon
 
 ## Dependencies
@@ -21,6 +22,8 @@ Set the ESYS_PATH environment variable before calling the make.
 - finish the UDP logger backend
 - file i/o-error handling
 - process-id dependent output file name
+- custom assertion handler
+- improve code documentation
 
 Copyright &copy; 2016 [Przemysław Podwapiński][98].<br>
 Distributed under the [Simplified BSD License][99].
