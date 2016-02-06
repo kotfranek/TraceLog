@@ -16,7 +16,7 @@ Lightweight Logging/Tracing utility
 
 ## Dependencies
 Requires the [ESys][10] framework.<br>
-Set the ESYS_PATH environment variable before calling the make.
+Set the ESYS_HOME environment variable before calling the make.
 
 ## Todo
 - finish the UDP logger backend

@@ -1,15 +1,16 @@
-ifdef ESYS_PATH
-    $(info ESys location is '$(ESYS_PATH)')
+ifdef ESYS_HOME
+    $(info ESys location is '$(ESYS_HOME)')
 else
-    $(error ESYS_PATH environment variable undefined)
+    $(warning ESYS_HOME environment variable undefined)
+    ESYS_HOME=../ESys
 endif
 
 TARGET = libtracelog
 OUTDIR = lib
 LIBS = -ltracelog -lesys
 CC = g++
-INCLUDES = include $(ESYS_PATH)/include
-LIBDIRS = lib/ $(ESYS_PATH)/lib
+INCLUDES = include $(ESYS_HOME)/include
+LIBDIRS = lib/ $(ESYS_HOME)/lib
 
 EXAMPLE_TARGET = log-demo
 EXAMPLE_UDPCLIENT = udp-client
@@ -27,14 +28,14 @@ SRCS = src/log/Logger.cpp src/log/LogEntry.cpp src/log/log.cpp src/log/ConsoleBa
 SRCS +=src/log/FileBackEnd.cpp src/log/LogPersistThread.cpp src/log/TraceBuffer.cpp src/log/TraceSharedContainer.cpp
 SRCS +=src/log/UdpClientMediator.cpp
 
-EXAMPLE_SRCS = example/main.cpp example/udpclient.cpp
+EXAMPLE_SRCS = example/main.cpp
 
 OBJS = $(subst .cpp,.o,$(SRCS))
 
 .PHONY: default all $(EXAMPLE_TARGET) clean
 
 default: all
-all: $(TARGET) $(EXAMPLE_TARGET) $(EXAMPLE_UDPCLIENT)
+all: $(TARGET) $(EXAMPLE_TARGET)
 
 .PRECIOUS: $(TARGET) $(OBJS)
 
@@ -63,16 +64,8 @@ clean:
 $(EXAMPLE_TARGET): main.o $(TARGET)
 	@mkdir -p $(EXAMPLE_OUTDIR)
 	$(CC) $< $(LFLAGS) $(LIBS) -o $(EXAMPLE_OUTDIR)/$@ -pthread $(OPTFLAGS)
-	
-$(EXAMPLE_UDPCLIENT): udpclient.o $(TARGET)
-	@mkdir -p $(EXAMPLE_OUTDIR)
-	$(CC) $< $(LFLAGS) $(LIBS) -o $(EXAMPLE_OUTDIR)/$@ -pthread $(OPTFLAGS)	
 
 
 main.o: example/main.cpp
-	@$(CC) $(CFLAGS) -MM -MT $@ -MF $(patsubst %.o,%.d,$@) $<
-	$(CC) $(CFLAGS) -c $< -o $@
-
-udpclient.o: example/udpclient.cpp
 	@$(CC) $(CFLAGS) -MM -MT $@ -MF $(patsubst %.o,%.d,$@) $<
 	$(CC) $(CFLAGS) -c $< -o $@	

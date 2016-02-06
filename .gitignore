@@ -32,6 +32,7 @@
 
 # IDEs
 *.kdev*
+nbproject/*
 
 # Logs
 *.log
