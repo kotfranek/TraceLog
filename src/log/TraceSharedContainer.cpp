@@ -43,13 +43,9 @@ TraceSharedContainer::TraceSharedContainer()
 
 bool TraceSharedContainer::add( const LogEntry& entry )
 {
-    ::sys::TLockUnique l( m_mutex );
+    ::sys::TLockMutex l( m_mutex );
 
     const bool result = m_buffer.add( entry );
-    if ( result )
-    {
-        //::std::cout << "A" << ::std::endl;
-    }
     
     m_condDataAvail.notify_all();
     

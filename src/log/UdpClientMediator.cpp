@@ -89,6 +89,7 @@ void UdpClientMediator::run()
                     m_socket.send( s );             
                     
                     m_state = Mediator_Connected;
+                    
                 } 
                 break;                
             }
