@@ -82,14 +82,12 @@ void UdpClientMediator::run()
                     if ( m_socket.connect( addr ) )
                     {
                         ::std::cout << "CONNECTED..." << ::std::endl;   
-                    }
-                    
-                    ::net::Datagram s( addr );
-                    s.setContent( ::UDP_SERVER_ID );                    
-                    m_socket.send( s );             
-                    
-                    m_state = Mediator_Connected;
-                    
+                        ::net::Datagram s( addr );
+                        s.setContent( ::UDP_SERVER_ID );                    
+                        m_socket.send( s );             
+
+                        m_state = Mediator_Connected;                        
+                    }                                        
                 } 
                 break;                
             }

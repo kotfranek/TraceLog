@@ -24,6 +24,7 @@
  */
 
 #include "log/LogEntry.h"
+#include "esys/utils.h"
 
 #include <cstring>
 #include <sstream>
@@ -125,12 +126,12 @@ size_t LogEntry::Data::serialize( uint8_t* output ) const
     size_t offset = 0U;
     const uint16_t messageLength = strlen( m_message );
     
-    offset += serializeVariable<>( output, m_timestamp );
+    offset += ::esys::serialize( output + offset, m_timestamp );
     
     *( output + offset ) = traceLevelToChar( m_level );
     ++offset;
     
-    offset += serializeVariable<>( ( output + offset ), messageLength );
+    offset += ::esys::serialize( output + offset, messageLength );
     
     memcpy( output + offset, m_message, messageLength );
     offset += messageLength;
