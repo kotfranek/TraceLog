@@ -24,6 +24,8 @@
  */
 
 #include "log/UdpClientMediator.h"
+#include "sys/ESysDefs.h"
+#include "sys/StopWatch.h"
 #include "net/UdpSocket.h"
 #include "net/Datagram.h"
 
@@ -32,19 +34,28 @@
 namespace
 {
     /* UDP Client identification */
-    const ::std::string UDP_CLIENT_HANDSHAKE( "TRACELOG-CLIENT-HELLO" );  
+    const ::std::string UDP_CLIENT_HANDSHAKE( "TRACELOG_UDP_CLIENT_HS" );  
     
     /* UDP Client Disconnect */
-    const ::std::string UDP_CLIENT_CLOSE( "TRACELOG-CLIENT-CLOSE" );     
+    const ::std::string UDP_CLIENT_CLOSE( "TRACELOG_UDP_CLIENT_CLOSE" );
     
-    /* UDP Client Present */
-    const ::std::string UDP_CLIENT_PRESENT( "TRACELOG-CLIENT-PRESENT" );     
+    /* UDP Client Disconnect */
+    const ::std::string UDP_CLIENT_ID( "TRACELOG_UDP_CLIENT_ID" );    
     
     /* UDP Server identification */
-    const ::std::string UDP_SERVER_ID( "TRACELOG-SRV-HELLO" );
+    const ::std::string UDP_SERVER_HANDSHAKE( "TRACELOG_UDP_SRV_HS" );    
     
-    /* Maximum time for the Client's presence signal */
-    const uint64_t UDP_CLIENT_TIMEOUT_MS = 1000U;
+    /* UDP Server Heartbeat signal */
+    const ::std::string UDP_SERVER_HEARTBEAT( "TRACELOG_UDP_SRV_HB" );
+    
+    /* UDP Client Disconnect */
+    const ::std::string UDP_SERVER_CLOSE( "TRACELOG_UDP_SRV_CLOSE" );         
+    
+    /* UDP Client Present */
+    const ::std::string UDP_CLIENT_PRESENT( "TRACELOG-CLIENT-PRESENT" );         
+    
+    /* Maximum time for the Server's presence signal */
+    const uint64_t UDP_SERVER_HEARTBEAT_PERIOD = 500U * 1000U;
 }
 
 namespace trace
@@ -54,26 +65,43 @@ UdpClientMediator::UdpClientMediator( ::net::UdpSocket& socket )
     : ::sys::AbstractThread( "UdpClientMediator" )
     , m_socket( socket )
     , m_state( Mediator_Disconnected )
+    , m_clientId()
+    , m_udpMutex()
 {
 
+}
+
+
+UdpClientMediator::MediatorState UdpClientMediator::getState() const
+{
+    return m_state;
+}
+
+
+void  UdpClientMediator::setState( MediatorState state )
+{
+    m_state = state;    
+}
+
+
+bool UdpClientMediator::isState( const MediatorState state ) const
+{
+    return state == getState();
 }
 
 
 void UdpClientMediator::run()
 {
     ::net::Datagram fromClient;
+    ::sys::StopWatch heartBeatTimer;
     
     while( !isStopRequested() )
     {
+        //::sys::TLockMutex l( m_udpMutex );
+        
         switch ( m_state )
         {
             case Mediator_Disconnected:
-            {
-                m_state = Mediator_Waiting;
-                break;
-            }
-            
-            case Mediator_Waiting:
             {
                 if ( waitForClient( fromClient, ::UDP_CLIENT_HANDSHAKE ) )
                 {
@@ -81,29 +109,43 @@ void UdpClientMediator::run()
 
                     if ( m_socket.connect( addr ) )
                     {
-                        ::std::cout << "CONNECTED..." << ::std::endl;   
-                        ::net::Datagram s( addr );
-                        s.setContent( ::UDP_SERVER_ID );                    
-                        m_socket.send( s );             
+                        ::std::cout << "HANDSHAKE..." << ::std::endl;   
+                        sendStringToClient( ::UDP_SERVER_HANDSHAKE );
 
-                        m_state = Mediator_Connected;                        
+                        m_state = Mediator_WaitForClientId;                        
                     }                                        
                 } 
-                break;                
+                break;                  
+            }
+            
+            case Mediator_WaitForClientId:
+            {
+                ::std::string clientId;
+                
+                if ( receiveStringFromClient( fromClient, clientId ) )
+                {
+                    if ( 0 == clientId.find( UDP_CLIENT_ID ) )
+                    {
+                        ::std::cout << "IDENTIFIED..." << ::std::endl;   
+                        m_clientId = clientId;
+                        
+                        heartBeatTimer.start();
+                        sendStringToClient( ::UDP_SERVER_HEARTBEAT );
+                        
+                        m_state = Mediator_Connected;
+                    }
+                }
+                break;
             }
             
             case Mediator_Connected:
             {
-                // TODO: Check the time, that passed from the last Client Present message
-                if ( waitForClient( fromClient, ::UDP_CLIENT_PRESENT ) )
+                if ( heartBeatTimer.elapsed( ::UDP_SERVER_HEARTBEAT_PERIOD ) )
                 {
-                    // Client present message received. Store the timestamp.
+                    ::std::cout << "SEND HEARTBEAT" << ::std::endl;   
+                    heartBeatTimer.reStart();
+                    sendStringToClient( ::UDP_SERVER_HEARTBEAT );
                 }
-                
-                /*if ( waitForClient( fromClient, ::UDP_CLIENT_CLOSE ) )
-                {
-                    m_state = Mediator_Disconnected;
-                }*/
                 break;
             }
             
@@ -114,17 +156,37 @@ void UdpClientMediator::run()
 }
 
 
-bool UdpClientMediator::waitForClient( ::net::Datagram& auxiliary, const ::std::string& handshake )
+void UdpClientMediator::sendStringToClient( const ::std::string& content )
+{
+    ::net::Datagram s;
+    s.setContent( content );                    
+    
+    m_socket.send( s );    
+}
+
+
+bool UdpClientMediator::receiveStringFromClient( ::net::Datagram& auxiliary, ::std::string& content )
 {
     bool result = false;
-    ::std::cout << "waitForClient: " << handshake << ::std::endl;     
+    
     if ( m_socket.receive( auxiliary ) )
-    {
-        ::std::cout << "received: " << handshake << ::std::endl;        
-        ::std::string handshake;
-        auxiliary.toString( handshake );
-        
-        result = 0 == handshake.compare( handshake );
+    {      
+        auxiliary.toString( content );
+        result = true;        
+    }    
+    
+    return result;
+}
+
+
+bool UdpClientMediator::waitForClient( ::net::Datagram& auxiliary, const ::std::string& content )
+{
+    bool result = false;
+    ::std::string fromClient;
+  
+    if ( receiveStringFromClient( auxiliary, fromClient ) )
+    {              
+        result = 0 == content.compare( fromClient );
     }
     
     return result;
@@ -135,6 +197,7 @@ bool UdpClientMediator::waitForClient( ::net::Datagram& auxiliary, const ::std::
 bool UdpClientMediator::send( const net::Datagram& datagram )
 {
     bool result = false;
+    //::sys::TLockMutex l( m_udpMutex );
     
     if ( m_state == Mediator_Connected )
     {

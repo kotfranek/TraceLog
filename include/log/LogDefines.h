@@ -26,7 +26,7 @@ namespace trace
     static const size_t LOG_MESSAGE_SIZE_MAX = 255U; 
 
     /* Log cache size */
-    static const size_t LOG_CACHE_SIZE = 64U; 
+    static const size_t LOG_CACHE_SIZE = 128U; 
     
     
     static const struct TraceVersion

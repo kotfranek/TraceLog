@@ -45,7 +45,7 @@ namespace
     const ::std::string UDP_CLIENT_HANDSHAKE( "TRACELOG-CLIENT-XO-XO\n" );
     
     /* UDP Wait-For-Receive Timeout in ms */
-    const uint32_t UDP_RECIEVE_TIMEOUT_MS = 1500U;
+    const uint32_t UDP_RECIEVE_TIMEOUT_MS = 250U;
     
     /* UDP Wait-For-Send Timeout in ms */
     const uint32_t UDP_SEND_TIMEOUT_MS = 50U;    

@@ -26,6 +26,7 @@
 #ifndef UDPCLIENTMEDIATOR_H
 #define UDPCLIENTMEDIATOR_H
 
+#include <mutex>
 #include "sys/AbstractThread.h"
 
 namespace net
@@ -42,7 +43,7 @@ namespace trace
     public:
         enum MediatorState
         {
-            Mediator_Waiting,
+            Mediator_WaitForClientId,
             Mediator_Connected,
             Mediator_Disconnected,
         };
@@ -71,13 +72,57 @@ namespace trace
          * from the Trace Client Application 
          * @result true on success
          */
-        bool waitForClient( ::net::Datagram& auxiliary, const ::std::string& handshake );
+        bool waitForClient( ::net::Datagram& auxiliary, const ::std::string& content );
         
+        
+        /**
+         * Receive text from the client
+         * @param auxiliary
+         * @param content
+         * @return 
+         */
+        bool receiveStringFromClient( ::net::Datagram& auxiliary, ::std::string& content );
+        
+        
+        /**
+         * Send the given text content to the connected client
+         * @param auxiliary
+         * @param content
+         */
+        void sendStringToClient( const ::std::string& content );
+        
+        
+        /**
+         * Set the new state
+         * @param state
+         */
+        void setState( MediatorState state );
+        
+        /**
+         * Get the current state
+         * @return 
+         */
+        MediatorState getState() const;
+        
+        
+        /**
+         * Check the current state
+         * @param state
+         * @return 
+         */
+        bool isState( const MediatorState state ) const;
+                
         /* Socket instance */
         ::net::UdpSocket& m_socket;
         
         /* Internal state */
         MediatorState m_state;
+        
+        /* Connected Client Id */
+        ::std::string m_clientId;
+        
+        /* Socket access mutex */
+        ::std::mutex m_udpMutex;        
     };
 
 }; // namespace trace
