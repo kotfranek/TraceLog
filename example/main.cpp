@@ -43,7 +43,7 @@ class DemoApp : public ::app::SimpleApp
 {
 public:
     DemoApp()
-        : ::app::SimpleApp( "dupet" )
+        : ::app::SimpleApp( "TraceLogDemo" )
     {
 
     }
