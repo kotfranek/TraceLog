@@ -39,7 +39,7 @@ namespace
         ::std::ios_base::in | ::std::ios_base::out | ::std::ios_base::binary | ::std::ios_base::trunc;        
         
     /* Maximal Single log Entry binary representation length */
-    const size_t MAX_LOG_ENTRY_STREAM_SIZE = sizeof( ::trace::LogEntry::Data );
+    const size_t MAX_LOG_ENTRY_STREAM_SIZE = sizeof( ::trace::entry::Payload );
     
     /* Static buffer, accessed always with mutex, so this is safe */
     uint8_t ENTRY_BUFFER[ MAX_LOG_ENTRY_STREAM_SIZE ] = {};

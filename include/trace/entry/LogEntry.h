@@ -28,33 +28,14 @@
 #include <string>
 #include <cstdarg>
 
-#include "LogDefines.h"
+#include "trace/LogDefines.h"
+#include "trace/entry/Payload.h"
 
 namespace trace
 {
     class LogEntry
     {
-    public:
-        
-        struct Data
-        {
-            /* Timestamp: ms since epoch */
-            uint64_t m_timestamp;
-            
-            /* Trace level */
-            LogLevel m_level;
-            
-            /* Message content */
-            char m_message[ LOG_MESSAGE_SIZE_MAX ]; 
-            
-            /**
-             * Serilize the buffer content. 
-             * @arg output buffer
-             * @return number of bytes written
-             */
-            size_t serialize( uint8_t* output ) const;
-        };
-               
+    public:                       
         LogEntry();
         LogEntry( const LogLevel level, const char* message );
         
@@ -65,7 +46,7 @@ namespace trace
         void set( const LogLevel level, const char* format, va_list args );
         
         /* Expose complete log entry R/O */
-        const Data& exposeData() const
+        const entry::Payload& exposeData() const
         {
             return m_data;
         }
@@ -87,7 +68,7 @@ namespace trace
         static uint64_t getTimestamp();
         
         /* Log content */
-        Data m_data;
+        entry::Payload m_data;
     };
 }
 

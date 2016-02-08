@@ -25,7 +25,7 @@
 
 #include "trace/ConsoleBackEnd.h"
 #include "trace/LogDefines.h"
-#include "trace/LogEntry.h"
+#include "trace/entry/LogEntry.h"
 
 #include <iostream>
 

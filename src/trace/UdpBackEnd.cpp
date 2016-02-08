@@ -24,7 +24,7 @@
  */
 
 #include "trace/UdpBackEnd.h"
-#include "trace/LogEntry.h"
+#include "trace/entry/LogEntry.h"
 #include "net/Datagram.h"
 
 #include <errno.h>

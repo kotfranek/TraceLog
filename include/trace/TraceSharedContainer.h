@@ -27,7 +27,7 @@
 #define TRACESHAREDCONTAINER_H
 
 #include "LogDefines.h"
-#include "LogEntry.h"
+#include "trace/entry/LogEntry.h"
 #include "TraceBuffer.h"
 
 #include <mutex>

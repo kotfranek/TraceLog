@@ -26,8 +26,8 @@
 #ifndef TRACEBUFFER_H
 #define TRACEBUFFER_H
 
-#include "LogDefines.h"
-#include "LogEntry.h"
+#include "trace/LogDefines.h"
+#include "trace/entry/LogEntry.h"
 
 namespace trace
 {

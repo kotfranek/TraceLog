@@ -32,7 +32,7 @@
 #include <ostream>
 #include "trace/LogDefines.h"
 #include "trace/ILogger.h"
-#include "trace/LogEntry.h"
+#include "trace/entry/LogEntry.h"
 #include "trace/TraceSharedContainer.h"
 #include "trace/LogPersistThread.h"
 

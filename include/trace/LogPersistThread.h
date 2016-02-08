@@ -33,7 +33,7 @@
 #include <condition_variable>
 
 #include "trace/LogDefines.h"
-#include "trace/LogEntry.h"
+#include "trace/entry/LogEntry.h"
 #include "sys/AbstractThread.h"
 
 namespace trace
