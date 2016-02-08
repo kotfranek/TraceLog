@@ -24,9 +24,9 @@ CFLAGS = -g -Wall -std=c++11 $(INCPARAMS) $(OPTFLAGS)
 LFLAGS = -Wall $(LIBDIRPARAMS)
 RUNARGS = 
 
-SRCS = src/log/Logger.cpp src/log/LogEntry.cpp src/log/log.cpp src/log/ConsoleBackEnd.cpp src/log/UdpBackEnd.cpp
-SRCS +=src/log/FileBackEnd.cpp src/log/LogPersistThread.cpp src/log/TraceBuffer.cpp src/log/TraceSharedContainer.cpp
-SRCS +=src/log/UdpClientMediator.cpp
+SRCS = src/trace/Logger.cpp src/trace/LogEntry.cpp src/trace/log.cpp src/trace/ConsoleBackEnd.cpp src/trace/UdpBackEnd.cpp
+SRCS +=src/trace/FileBackEnd.cpp src/trace/LogPersistThread.cpp src/trace/TraceBuffer.cpp src/trace/TraceSharedContainer.cpp
+SRCS +=src/trace/UdpClientMediator.cpp
 
 EXAMPLE_SRCS = example/main.cpp
 

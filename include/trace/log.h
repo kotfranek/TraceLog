@@ -26,7 +26,7 @@
 #ifndef LOG_H_INTERFACE
 #define LOG_H_INTERFACE
 
-#include "log/ILogger.h"
+#include "trace/ILogger.h"
 
 namespace trace
 {

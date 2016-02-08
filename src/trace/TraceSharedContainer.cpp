@@ -23,95 +23,61 @@
  *
  */
 
-#include "log/Logger.h"
-#include "log/ILogBackEnd.h"
+#include "trace/TraceSharedContainer.h"
 #include "sys/ESysDefs.h"
 
-#include <cstdarg>
-#include <cstdio>
-#include <sstream>
 #include <iostream>
 
-namespace trace 
+
+namespace trace
 {
 
-        
-Logger::Logger()
+TraceSharedContainer::TraceSharedContainer()
     : m_mutex()
+    , m_condDataAvail()
     , m_buffer()
-    , m_persistThread( m_buffer )
-    , m_backEnd( NULL )
 {
 
 }
 
 
-void Logger::setBackEnd( ILogBackEnd* backEnd )
+bool TraceSharedContainer::add( const LogEntry& entry )
 {
     ::sys::TLockMutex l( m_mutex );
+
+    const bool result = m_buffer.add( entry );
     
-    if ( NULL == m_backEnd )
-    {
-        m_backEnd = backEnd;
-        m_persistThread.setBackEnd( backEnd );
-        m_persistThread.start();
-    }
+    m_condDataAvail.notify_all();
+    
+    return result;
 }
 
 
-void Logger::log( const LogLevel level, const std::string& message)
+size_t TraceSharedContainer::waitUntilAvailableAndRead( const uint32_t timeout, LogEntry* entryBuffer )
 {
-    log( level, message.c_str() );
-}
-
-
-void Logger::logV( const LogLevel level, const char* format, ... )
-{    
-    va_list args;
-    va_start ( args, format );
+    ::sys::TLockUnique l( m_mutex );
     
-    LogEntry entry;
-    entry.set( level, format, args );
+    size_t result = 0U;
     
-    if ( m_buffer.add( entry ) )
+    if ( std::cv_status::no_timeout == m_condDataAvail.wait_for( l, ::std::chrono::milliseconds( timeout ) ) )
     {
+        result = m_buffer.size();        
         
-    }     
-    
-    va_end ( args );    
-}
-
-
-
-void Logger::log( const LogLevel level, const char* message )
-{
-    logV( level, "%s", message );
-}
-
-
-void Logger::shutDown()
-{
-    ::sys::TLockMutex l( m_mutex );
-    
-    if ( NULL != m_backEnd )
-    {
-        m_persistThread.requestStop();
-        m_persistThread.join();
-        
-        m_backEnd = NULL;
+        for( size_t i = 0U; i < result; i++ )
+        {
+            if ( m_buffer.read( entryBuffer[ i ] ) )
+            {
+                //::std::cout << "B" << ::std::endl;            
+            }
+        }        
     }
-}
-
-
-void Logger::assert( const char* fileName, const uint32_t line, const char* message )
-{
-    logV( LogLevel_Assert, "%s:%u-> %s", fileName, line, message );
+    
+    return result;
 }
 
 
 
-
-Logger::~Logger()
+TraceSharedContainer::~TraceSharedContainer()
 {
 
 }

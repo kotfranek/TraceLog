@@ -23,7 +23,7 @@
  *
  */
 
-#include "log/UdpClientMediator.h"
+#include "trace/UdpClientMediator.h"
 #include "sys/ESysDefs.h"
 #include "sys/StopWatch.h"
 #include "net/UdpSocket.h"

@@ -30,11 +30,11 @@
 #include <mutex>
 #include <string>
 #include <ostream>
-#include "log/LogDefines.h"
-#include "log/ILogger.h"
-#include "log/LogEntry.h"
-#include "log/TraceSharedContainer.h"
-#include "log/LogPersistThread.h"
+#include "trace/LogDefines.h"
+#include "trace/ILogger.h"
+#include "trace/LogEntry.h"
+#include "trace/TraceSharedContainer.h"
+#include "trace/LogPersistThread.h"
 
 namespace trace
 {       

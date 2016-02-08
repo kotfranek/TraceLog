@@ -23,72 +23,78 @@
  *
  */
 
-#ifndef ILOGGER_H
-#define ILOGGER_H
+#ifndef LOGGERBACKEND_H
+#define LOGGERBACKEND_H
 
+#include <stdint.h>
 #include <string>
+#include <fstream>
+#include <array>
 
-#include "log/LogDefines.h"
+#include "trace/ILogBackEnd.h"
+#include "trace/LogDefines.h"
+#include "trace/LogEntry.h"
 
 namespace trace
-{       
-    class ILogBackEnd;
-        
-    class ILogger
-    {        
-    public:        
-        /**
-         * Log a single string
-         * @arg level 
-         * @arg message
-         */
-        virtual void log( const LogLevel level, const ::std::string& message ) = 0;
-        
-        
-        /**
-         * Log a formatted C-string
-         */
-        virtual void logV( const LogLevel level, const char * format, ... ) = 0;
-        
-        
-        /**
-         * Log a C-string
-         * @arg level 
-         * @arg format Format C-string
-         * @arg ... variable arguments
-         */
-        virtual void log( const LogLevel level, const char* message ) = 0;
-        
-        
-        /**
-         * Execute an assertion and log the provided text
-         */
-        virtual void assert( const char* fileName, const uint32_t line, const char* message ) = 0;
-              
-        
-        /**
-         * Set the backend implementation 
-         * @arg backEnd Valid implementation
-         */
-        virtual void setBackEnd( ILogBackEnd* backEnd ) = 0;
-        
-        
-        /**
-         * Close the log, clean the resources, notify the BackEnd
-         */
-        virtual void shutDown() = 0;
+{
 
-    protected:
-        ILogger()
-        {
-        };
+class FileBackEnd : public ILogBackEnd
+{
+public:
         
-        virtual ~ILogger()
-        {
-        };
+    FileBackEnd();
+    ~FileBackEnd();
+    
+   
+private:
+    FileBackEnd(const FileBackEnd& other);    
+    FileBackEnd& operator=(const FileBackEnd& other);
+    
+    /**
+     * @see ILogBackEnd
+     */
+    virtual bool add( const LogEntry& entry );
+
+    /**
+     * @see ILogBackEnd
+     */
+    virtual void onRegister();
+    
+    /**
+     * @see ILogBackEnd
+     */    
+    virtual void onShutdown();
+    
+    /**
+     * @see ILogBackEnd
+     */      
+    virtual const ::std::string& getName() const;
+       
+    /**
+     * Persist the entries buffer
+     */
+    void persistEntries();
+    
+    /** 
+     * Depending on the settings and the Trace Level will print 
+     * the content to console 
+     * @arg entry Log item
+     */
+    void printToConsoleIfRequired( const LogEntry& entry ) const;
         
-    };
+    /* Whether to print the error messages to console */
+    bool m_errorToConsole;
+                
+    /* Log Cache index */
+    size_t m_index;    
+    
+    /* Log Entries */
+    LogEntry m_entries[ LOG_CACHE_SIZE ];
+    
+    /* Output file handle */
+    ::std::fstream m_file;
+};
 
 };
 
-#endif // ILOGGER_H
+#endif // LOGGERBACKEND_H

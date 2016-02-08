@@ -23,8 +23,8 @@
  *
  */
 
-#include "log/FileBackEnd.h"
-#include "log/ConsoleBackEnd.h"
+#include "trace/FileBackEnd.h"
+#include "trace/ConsoleBackEnd.h"
 #include "sys/StopWatch.h"
 #include <iostream>
 

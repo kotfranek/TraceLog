@@ -23,79 +23,45 @@
  *
  */
 
-#include "log/TraceBuffer.h"
-#include <cstdlib>
+#include "trace/log.h"
+#include "trace/Logger.h"
+#include "trace/FileBackEnd.h"
+#include "trace/ConsoleBackEnd.h"
 
 namespace
 {
-    /**
-     * Range-Safe Increment routine
-     * @arg value to be Incremented
-     */
-    inline size_t safeIncrement( const size_t& value )
-    {
-        return ( value + 1U ) % ::trace::LOG_CACHE_SIZE;        
-    }
+    /* Logger instance */
+    ::trace::Logger S_LOGGER;
+    
+    /* Console backend instance */
+    ::trace::ConsoleBackEnd S_BE_CONSOLE;
+        
+    /* File backend instance */
+    ::trace::FileBackEnd S_BE_FILE;    
 }
 
 namespace trace
 {
-
-TraceBuffer::TraceBuffer()
-    : m_entries()
-    , m_writePtr( 0U )
-    , m_readPtr( 0U )
-{
-
-}
-
-
-bool TraceBuffer::add( const LogEntry& entry )
-{
-    const size_t next = ::safeIncrement( m_writePtr );
-    bool writePossible = next != m_readPtr;
-    
-    if ( writePossible )
+    ILogger& logInstance()
     {
-        m_entries[ m_writePtr ] = entry; 
-        m_writePtr = next;
-    }    
-    
-    return writePossible;
-}
-
-
-bool TraceBuffer::read( LogEntry& entry )
-{
-    bool readPossible = m_readPtr != m_writePtr;
-    
-    if ( readPossible )
-    {
-        entry = m_entries[ m_readPtr ];
-        m_readPtr = ::safeIncrement( m_readPtr );;
-    }    
-    
-    return readPossible;
-}
-
-
-size_t TraceBuffer::size() const
-{
-    ssize_t result = m_writePtr - m_readPtr;
-    
-    if ( result < 0 )
-    {
-        result += LOG_CACHE_SIZE;
+        return S_LOGGER;
     }
-    return result;
-}
-
-
-
-TraceBuffer::~TraceBuffer()
-{
-
-}
-
-
-}; // 
+    
+    
+    ILogBackEnd& logBackend( const LogBackend backEnd )
+    {
+        switch( backEnd )
+        {
+            case LogBackend_Console:
+                return S_BE_CONSOLE;
+                
+            case LogBackend_File:
+                return S_BE_FILE;
+                
+            default:
+                return S_BE_CONSOLE;
+        }
+        
+        return S_BE_CONSOLE;
+    }
+};

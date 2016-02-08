@@ -23,7 +23,7 @@
  *
  */
 
-#include "log/LogEntry.h"
+#include "trace/LogEntry.h"
 #include "esys/utils.h"
 
 #include <cstring>

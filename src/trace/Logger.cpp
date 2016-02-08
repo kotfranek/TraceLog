@@ -23,61 +23,95 @@
  *
  */
 
-#include "log/TraceSharedContainer.h"
+#include "trace/Logger.h"
+#include "trace/ILogBackEnd.h"
 #include "sys/ESysDefs.h"
 
+#include <cstdarg>
+#include <cstdio>
+#include <sstream>
 #include <iostream>
 
-
-namespace trace
+namespace trace 
 {
 
-TraceSharedContainer::TraceSharedContainer()
+        
+Logger::Logger()
     : m_mutex()
-    , m_condDataAvail()
     , m_buffer()
+    , m_persistThread( m_buffer )
+    , m_backEnd( NULL )
 {
 
 }
 
 
-bool TraceSharedContainer::add( const LogEntry& entry )
+void Logger::setBackEnd( ILogBackEnd* backEnd )
 {
     ::sys::TLockMutex l( m_mutex );
-
-    const bool result = m_buffer.add( entry );
     
-    m_condDataAvail.notify_all();
-    
-    return result;
-}
-
-
-size_t TraceSharedContainer::waitUntilAvailableAndRead( const uint32_t timeout, LogEntry* entryBuffer )
-{
-    ::sys::TLockUnique l( m_mutex );
-    
-    size_t result = 0U;
-    
-    if ( std::cv_status::no_timeout == m_condDataAvail.wait_for( l, ::std::chrono::milliseconds( timeout ) ) )
+    if ( NULL == m_backEnd )
     {
-        result = m_buffer.size();        
-        
-        for( size_t i = 0U; i < result; i++ )
-        {
-            if ( m_buffer.read( entryBuffer[ i ] ) )
-            {
-                //::std::cout << "B" << ::std::endl;            
-            }
-        }        
+        m_backEnd = backEnd;
+        m_persistThread.setBackEnd( backEnd );
+        m_persistThread.start();
     }
+}
+
+
+void Logger::log( const LogLevel level, const std::string& message)
+{
+    log( level, message.c_str() );
+}
+
+
+void Logger::logV( const LogLevel level, const char* format, ... )
+{    
+    va_list args;
+    va_start ( args, format );
     
-    return result;
+    LogEntry entry;
+    entry.set( level, format, args );
+    
+    if ( m_buffer.add( entry ) )
+    {
+        
+    }     
+    
+    va_end ( args );    
 }
 
 
 
-TraceSharedContainer::~TraceSharedContainer()
+void Logger::log( const LogLevel level, const char* message )
+{
+    logV( level, "%s", message );
+}
+
+
+void Logger::shutDown()
+{
+    ::sys::TLockMutex l( m_mutex );
+    
+    if ( NULL != m_backEnd )
+    {
+        m_persistThread.requestStop();
+        m_persistThread.join();
+        
+        m_backEnd = NULL;
+    }
+}
+
+
+void Logger::assert( const char* fileName, const uint32_t line, const char* message )
+{
+    logV( LogLevel_Assert, "%s:%u-> %s", fileName, line, message );
+}
+
+
+
+
+Logger::~Logger()
 {
 
 }

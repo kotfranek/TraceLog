@@ -1,8 +1,8 @@
 #include "app/SimpleApp.h"
 #include "sys/AbstractThread.h"
 #include "sys/StopWatch.h"
-#include "log/log.h"
-#include "log/UdpBackEnd.h"
+#include "trace/log.h"
+#include "trace/UdpBackEnd.h"
 
 namespace
 {

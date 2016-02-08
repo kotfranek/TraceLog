@@ -26,9 +26,9 @@
  *
  */
 
-#include "log/LogPersistThread.h"
-#include "log/ILogBackEnd.h"
-#include "log/TraceSharedContainer.h"
+#include "trace/LogPersistThread.h"
+#include "trace/ILogBackEnd.h"
+#include "trace/TraceSharedContainer.h"
 
 #include <cstdlib>
 #include <iostream>

@@ -27,7 +27,7 @@
 #define UDPBACKEND_H
 
 #include "ILogBackEnd.h"
-#include "log/UdpClientMediator.h"
+#include "trace/UdpClientMediator.h"
 #include "net/UdpSocket.h"
 
 namespace trace

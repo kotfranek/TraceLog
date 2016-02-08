@@ -32,8 +32,8 @@
 #include <mutex>
 #include <condition_variable>
 
-#include "log/LogDefines.h"
-#include "log/LogEntry.h"
+#include "trace/LogDefines.h"
+#include "trace/LogEntry.h"
 #include "sys/AbstractThread.h"
 
 namespace trace

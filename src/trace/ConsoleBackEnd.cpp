@@ -23,96 +23,54 @@
  *
  */
 
-#include "log/UdpBackEnd.h"
-#include "log/LogEntry.h"
-#include "net/Datagram.h"
-
-#include <errno.h>
-#include <string.h>
-#include <unistd.h>
-#include <netdb.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
+#include "trace/ConsoleBackEnd.h"
+#include "trace/LogDefines.h"
+#include "trace/LogEntry.h"
 
 #include <iostream>
 
 namespace
 {
     /* Backend name */
-    const ::std::string LOG_BACKEND_NAME( "UDP" ); 
-    
-    /* UDP Client identification */
-    const ::std::string UDP_CLIENT_HANDSHAKE( "TRACELOG-CLIENT-XO-XO\n" );
-    
-    /* UDP Wait-For-Receive Timeout in ms */
-    const uint32_t UDP_RECIEVE_TIMEOUT_MS = 250U;
-    
-    /* UDP Wait-For-Send Timeout in ms */
-    const uint32_t UDP_SEND_TIMEOUT_MS = 50U;    
-    
-    /* Server Receive Port */
-    const uint16_t UDP_LISTEN_PORT = 55555U;
+    const ::std::string LOG_BACKEND_NAME( "Console" );    
 }
 
 namespace trace
 {
 
-UdpBackEnd::UdpBackEnd()
+ConsoleBackEnd::ConsoleBackEnd()
     : ILogBackEnd()
-    , m_socket()
-    , m_mediator( m_socket )
+{
+}
+
+
+void ConsoleBackEnd::onRegister()
 {
 
 }
 
 
-void UdpBackEnd::onRegister()
-{         
-    if ( m_socket.open( UDP_LISTEN_PORT ) )
-    {        
-        m_socket.setTimeouts( UDP_SEND_TIMEOUT_MS, UDP_RECIEVE_TIMEOUT_MS );       
-        m_mediator.start();                      
-    }       
-}
-
-
-bool UdpBackEnd::add( const LogEntry& entry )
-{    
-    return send( entry.toString() );
-}
-
-
-bool UdpBackEnd::send( const std::string& text )
+void ConsoleBackEnd::onShutdown()
 {
-    ::net::Datagram d;
-    d.setContent( text );
- 
-    return m_mediator.send( d );    
+
 }
 
 
 
-void UdpBackEnd::onShutdown()
+bool ConsoleBackEnd::add( const LogEntry& entry )
 {
-    send( "onShutdown" );
+    ::std::ostream& outStream = ( entry.exposeData().m_level > LogLevel_Error ) ? ::std::cout : ::std::cerr;
+
+    outStream << entry.toString() << ::std::endl;
     
-    ::std::cout << "onShutdown" << ::std::endl;
-    m_mediator.requestStop();
-    m_mediator.join();
-    
-    m_socket.close();
+    return true;
 }
 
 
-const ::std::string& UdpBackEnd::getName() const
+
+const ::std::string& ConsoleBackEnd::getName() const
 {
     return ::LOG_BACKEND_NAME;
 }
 
-
-UdpBackEnd::~UdpBackEnd()
-{
-
-}
-
-}; // namespace trace
+};
