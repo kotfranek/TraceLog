@@ -41,7 +41,7 @@ TraceSharedContainer::TraceSharedContainer()
 }
 
 
-bool TraceSharedContainer::add( const LogEntry& entry )
+bool TraceSharedContainer::add( const entry::LogEntry& entry )
 {
     ::sys::TLockMutex l( m_mutex );
 
@@ -53,7 +53,7 @@ bool TraceSharedContainer::add( const LogEntry& entry )
 }
 
 
-size_t TraceSharedContainer::waitUntilAvailableAndRead( const uint32_t timeout, LogEntry* entryBuffer )
+size_t TraceSharedContainer::waitUntilAvailableAndRead( const uint32_t timeout, entry::LogEntry* entryBuffer )
 {
     ::sys::TLockUnique l( m_mutex );
     

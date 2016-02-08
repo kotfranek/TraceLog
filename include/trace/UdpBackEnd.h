@@ -42,7 +42,7 @@ namespace trace
         /**
         * @see ILogBackEnd
         */
-        virtual bool add( const LogEntry& entry );
+        virtual bool add( const entry::LogEntry& entry );
 
         /**
         * @see ILogBackEnd

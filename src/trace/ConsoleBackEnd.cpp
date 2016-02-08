@@ -57,7 +57,7 @@ void ConsoleBackEnd::onShutdown()
 
 
 
-bool ConsoleBackEnd::add( const LogEntry& entry )
+bool ConsoleBackEnd::add( const entry::LogEntry& entry )
 {
     ::std::ostream& outStream = ( entry.exposeData().m_level > LogLevel_Error ) ? ::std::cout : ::std::cerr;
 

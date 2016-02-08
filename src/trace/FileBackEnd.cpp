@@ -25,6 +25,7 @@
 
 #include "trace/FileBackEnd.h"
 #include "trace/ConsoleBackEnd.h"
+#include "trace/entry/LogEntry.h"
 #include "sys/StopWatch.h"
 #include <iostream>
 
@@ -89,7 +90,7 @@ void FileBackEnd::onShutdown()
 }
 
 
-bool FileBackEnd::add( const LogEntry& entry )
+bool FileBackEnd::add( const entry::LogEntry& entry )
 {
     if ( LOG_CACHE_SIZE <= m_index )
     {
@@ -131,7 +132,7 @@ void FileBackEnd::persistEntries()
 }
 
 
-void FileBackEnd::printToConsoleIfRequired( const LogEntry& entry ) const
+void FileBackEnd::printToConsoleIfRequired( const entry::LogEntry& entry ) const
 {
     if ( m_errorToConsole && entry.exposeData().m_level <= LogLevel_Error)
     {

@@ -77,7 +77,7 @@ private:
     size_t m_index;    
     
     /* Log Entries */
-    LogEntry m_entries[ LOG_CACHE_SIZE ];    
+    entry::LogEntry m_entries[ LOG_CACHE_SIZE ];    
 };
 
 }; // 

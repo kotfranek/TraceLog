@@ -49,7 +49,7 @@ public:
      * @arg entry
      * @result true, if element was added
      */
-    bool add( const LogEntry& entry );
+    bool add( const entry::LogEntry& entry );
     
     
     /**
@@ -59,7 +59,7 @@ public:
      * @arg [out] entry
      * @result number of entries
      */
-    size_t waitUntilAvailableAndRead( const uint32_t timeout, LogEntry* entryBuffer );
+    size_t waitUntilAvailableAndRead( const uint32_t timeout, entry::LogEntry* entryBuffer );
     
 private:    
     TraceSharedContainer(const TraceSharedContainer& other);

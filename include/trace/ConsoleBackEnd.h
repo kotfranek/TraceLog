@@ -26,7 +26,7 @@
 #ifndef CONSOLEBACKEND_H
 #define CONSOLEBACKEND_H
 
-#include "ILogBackEnd.h"
+#include "trace/ILogBackEnd.h"
 
 namespace trace
 {
@@ -50,7 +50,7 @@ namespace trace
         /**
         * @see ILogBackEnd
         */
-        virtual bool add( const LogEntry& entry );
+        virtual bool add( const entry::LogEntry& entry );
 
         /**
         * @see ILogBackEnd

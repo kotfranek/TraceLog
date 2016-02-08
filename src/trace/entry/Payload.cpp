@@ -95,6 +95,12 @@ size_t Payload::serialize( uint8_t* output ) const
 }
 
 
+void Payload::deSerialize( uint8_t* input )
+{
+    
+}
+
+
 char Payload::traceLevelToChar( const ::trace::LogLevel level )
 {
     return ::traceLevelToChar( level );

@@ -72,7 +72,7 @@ void LogPersistThread::setBackEnd( ILogBackEnd* backEnd )
 void LogPersistThread::run()
 {   
     m_backEnd->onRegister();
-    m_backEnd->add( LogEntry( LogLevel_Internal, ::backendRegisteredText( m_backEnd->getName() ).c_str() ) );   
+    m_backEnd->add( entry::LogEntry( LogLevel_Internal, ::backendRegisteredText( m_backEnd->getName() ).c_str() ) );   
     
     bool assertion = false;
     
@@ -94,7 +94,7 @@ void LogPersistThread::run()
     }
     
     /* Add the closing entry and shutdown the LogBackEnd */
-    m_backEnd->add( LogEntry( LogLevel_Internal, "Shutdown the BackEnd" ) );    
+    m_backEnd->add( entry::LogEntry( LogLevel_Internal, "Shutdown the BackEnd" ) );    
     m_backEnd->onShutdown();
     
     /* Here the LogBackEnd is switched off, all entries are expected to be persisted.

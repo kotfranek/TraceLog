@@ -47,7 +47,7 @@ public:
      * @arg entry
      * @result true, if element was added
      */
-    bool add( const LogEntry& entry );
+    bool add( const entry::LogEntry& entry );
     
     
     /**
@@ -55,7 +55,7 @@ public:
      * @arg [out] entry
      * @result true, if element was available
      */
-    bool read( LogEntry& entry );     
+    bool read( entry::LogEntry& entry );     
     
     /**
      * Get number of stored elements
@@ -68,7 +68,7 @@ private:
     
     
     /* Log Entries */
-    LogEntry m_entries[ LOG_CACHE_SIZE ]; 
+    entry::LogEntry m_entries[ LOG_CACHE_SIZE ]; 
     
     /* Write pointer */
     size_t m_writePtr;

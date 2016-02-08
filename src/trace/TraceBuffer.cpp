@@ -50,7 +50,7 @@ TraceBuffer::TraceBuffer()
 }
 
 
-bool TraceBuffer::add( const LogEntry& entry )
+bool TraceBuffer::add( const entry::LogEntry& entry )
 {
     const size_t next = ::safeIncrement( m_writePtr );
     bool writePossible = next != m_readPtr;
@@ -65,7 +65,7 @@ bool TraceBuffer::add( const LogEntry& entry )
 }
 
 
-bool TraceBuffer::read( LogEntry& entry )
+bool TraceBuffer::read( entry::LogEntry& entry )
 {
     bool readPossible = m_readPtr != m_writePtr;
     

@@ -29,10 +29,11 @@
 #include <string>
 
 namespace trace
-{
-    class LogEntry;
-    
-    
+{       
+    namespace entry
+    {
+        class LogEntry;
+    }    
     /**
     * Log BackEnd Interface 
     * 
@@ -50,7 +51,7 @@ namespace trace
         * @arg entry
         * @result true, on successful entry inhibit
         */
-        virtual bool add( const ::trace::LogEntry& entry ) = 0;
+        virtual bool add( const entry::LogEntry& entry ) = 0;
         
         
         /**

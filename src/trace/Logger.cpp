@@ -70,7 +70,7 @@ void Logger::logV( const LogLevel level, const char* format, ... )
     va_list args;
     va_start ( args, format );
     
-    LogEntry entry;
+    entry::LogEntry entry;
     entry.set( level, format, args );
     
     if ( m_buffer.add( entry ) )

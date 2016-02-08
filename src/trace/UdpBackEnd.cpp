@@ -76,7 +76,7 @@ void UdpBackEnd::onRegister()
 }
 
 
-bool UdpBackEnd::add( const LogEntry& entry )
+bool UdpBackEnd::add( const entry::LogEntry& entry )
 {    
     return send( entry.toString() );
 }

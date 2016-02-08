@@ -29,7 +29,6 @@
 #include <stdint.h>
 #include <string>
 #include <fstream>
-#include <array>
 
 #include "trace/ILogBackEnd.h"
 #include "trace/LogDefines.h"
@@ -53,7 +52,7 @@ private:
     /**
      * @see ILogBackEnd
      */
-    virtual bool add( const LogEntry& entry );
+    virtual bool add( const ::trace::entry::LogEntry& entry );
 
     /**
      * @see ILogBackEnd
@@ -80,7 +79,7 @@ private:
      * the content to console 
      * @arg entry Log item
      */
-    void printToConsoleIfRequired( const LogEntry& entry ) const;
+    void printToConsoleIfRequired( const entry::LogEntry& entry ) const;
         
     /* Whether to print the error messages to console */
     bool m_errorToConsole;
@@ -89,7 +88,7 @@ private:
     size_t m_index;    
     
     /* Log Entries */
-    LogEntry m_entries[ LOG_CACHE_SIZE ];
+    entry::LogEntry m_entries[ LOG_CACHE_SIZE ];
     
     /* Output file handle */
     ::std::fstream m_file;

@@ -33,42 +33,45 @@
 
 namespace trace
 {
-    class LogEntry
-    {
-    public:                       
-        LogEntry();
-        LogEntry( const LogLevel level, const char* message );
-        
-        /* Set the entry values */
-        void set( const LogLevel level, const char* message );
-        
-        /* Set the entry values with a format string */
-        void set( const LogLevel level, const char* format, va_list args );
-        
-        /* Expose complete log entry R/O */
-        const entry::Payload& exposeData() const
+    namespace entry
+    {        
+        class LogEntry
         {
-            return m_data;
-        }
-        
-        /* Thest the LogLevel */
-        bool isLevel( const LogLevel level ) const
-        {
-            return level == m_data.m_level;
-        }
-        
-        
-        /* Convert to text */
-        ::std::string toString() const;
-        
-    private:
-        LogEntry( const uint64_t& timestamp, const LogLevel level, const char* message );
-        
-        /* Get actual timestamp in ms */
-        static uint64_t getTimestamp();
-        
-        /* Log content */
-        entry::Payload m_data;
+        public:                       
+            LogEntry();
+            LogEntry( const LogLevel level, const char* message );
+
+            /* Set the entry values */
+            void set( const LogLevel level, const char* message );
+
+            /* Set the entry values with a format string */
+            void set( const LogLevel level, const char* format, va_list args );
+
+            /* Expose complete log entry R/O */
+            const entry::Payload& exposeData() const
+            {
+                return m_data;
+            }
+
+            /* Thest the LogLevel */
+            bool isLevel( const LogLevel level ) const
+            {
+                return level == m_data.m_level;
+            }
+
+
+            /* Convert to text */
+            ::std::string toString() const;
+
+        private:
+            LogEntry( const uint64_t& timestamp, const LogLevel level, const char* message );
+
+            /* Get actual timestamp in ms */
+            static uint64_t getTimestamp();
+
+            /* Log content */
+            Payload m_data;
+        };
     };
 }
 

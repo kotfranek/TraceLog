@@ -63,6 +63,9 @@ namespace
 
 namespace trace
 {
+namespace entry
+{
+    
 LogEntry::LogEntry()
     : LogEntry( 0U, LogLevel_Debug, "" )
 {
@@ -121,5 +124,6 @@ std::string LogEntry::toString() const
     
     return result.str();
 }
-    
+
+};   
 };

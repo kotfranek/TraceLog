@@ -41,6 +41,13 @@ namespace trace
              */
             size_t serialize( uint8_t* output ) const;
             
+            
+            /**
+             * Fill the payload from serialized buffer
+             * @param input
+             */
+            void deSerialize( uint8_t* input );
+            
             /**
              * Convert the TraceLevel to character
              * @param level
