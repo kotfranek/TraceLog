@@ -34,6 +34,7 @@ namespace trace
     {
         LogBackend_Console,
         LogBackend_File,
+        LogBackend_Udp,
         LogBackend_Default = LogBackend_Console,    
     };
     
@@ -57,19 +58,34 @@ namespace trace
 /* Backend selection. Backend has to be a global object */
 #define LOGGER_SET_BACKEND( backend ) LOGGER_INSTANCE.setBackEnd( backend )
 
+/* Enable the Console Backend */
 #define LOGGER_INIT_BE_CONSOLE LOGGER_SET_BACKEND( &::trace::logBackend( ::trace::LogBackend_Console ) )
 
+/* Enable the File Backend */
 #define LOGGER_INIT_BE_FILE LOGGER_SET_BACKEND( &::trace::logBackend( ::trace::LogBackend_File ) )
 
+/* Enable the UDP Server Backend */
+#define LOGGER_INIT_BE_UDP LOGGER_SET_BACKEND( &::trace::logBackend( ::trace::LogBackend_Udp ) )
+
+/* Enable the Default Backend */
 #define LOGGER_INIT_BE_DEFAULT LOGGER_INIT_BE_CONSOLE
 
 /* Neat log close */
 #define LOGGER_SHUTDOWN LOGGER_INSTANCE.shutDown
 
+/* Log with INFO level */
 #define LOG_INFO_C( msg, ... ) LOGGER_INSTANCE.logV( ::trace::LogLevel_Info, msg, ##__VA_ARGS__ )
+
+/* Log with DEBUG level */
 #define LOG_DEBUG_C( msg, ... ) LOGGER_INSTANCE.logV( ::trace::LogLevel_Debug, msg, ##__VA_ARGS__ )
+
+/* Log with WARNING level */
 #define LOG_WARN_C( msg, ... ) LOGGER_INSTANCE.logV( ::trace::LogLevel_Warning, msg, ##__VA_ARGS__ )
+
+/* Log with ERROR level */
 #define LOG_ERR_C( msg, ... ) LOGGER_INSTANCE.logV( ::trace::LogLevel_Error, msg, ##__VA_ARGS__ )
+
+/* Log with DEVELOPER level */
 #define LOG_DEV_C( msg, ... ) LOGGER_INSTANCE.logV( ::trace::LogLevel_Developer, msg, ##__VA_ARGS__ )
 
 /* in case of a negative condition result log and invoke registered AbortHandler */
