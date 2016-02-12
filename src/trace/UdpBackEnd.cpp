@@ -41,14 +41,11 @@ namespace
     /* Backend name */
     const ::std::string LOG_BACKEND_NAME( "UDP" ); 
     
-    /* UDP Client identification */
-    const ::std::string UDP_CLIENT_HANDSHAKE( "TRACELOG-CLIENT-XO-XO\n" );
-    
     /* UDP Wait-For-Receive Timeout in ms */
-    const uint32_t UDP_RECIEVE_TIMEOUT_MS = 250U;
+    const uint32_t UDP_RECIEVE_TIMEOUT_MS = 0U;
     
     /* UDP Wait-For-Send Timeout in ms */
-    const uint32_t UDP_SEND_TIMEOUT_MS = 50U;    
+    const uint32_t UDP_SEND_TIMEOUT_MS = 5U;    
     
     /* Server Receive Port */
     const uint16_t UDP_LISTEN_PORT = 55555U;
@@ -93,10 +90,7 @@ bool UdpBackEnd::send( const std::string& text )
 
 
 void UdpBackEnd::onShutdown()
-{
-    send( "onShutdown" );
-    
-    ::std::cout << "onShutdown" << ::std::endl;
+{   
     m_mediator.requestStop();
     m_mediator.join();
     
@@ -112,7 +106,7 @@ const ::std::string& UdpBackEnd::getName() const
 
 UdpBackEnd::~UdpBackEnd()
 {
-
+    
 }
 
 }; // namespace trace

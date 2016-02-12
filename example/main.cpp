@@ -65,7 +65,14 @@ private:
         
         //LOG_ASSERT( false, "poop!" );
         
-        waitForSignal( 15000U );
+        if ( waitForExit( 15000U ) )
+        {
+            LOG_INFO_C( "Example running until end" );
+        }
+        else
+        {
+            LOG_WARN_C( "Example Timeout" );
+        }
         
         for ( size_t i = 0U; i < NUM_TH; i++ )
         {

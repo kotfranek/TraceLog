@@ -102,7 +102,7 @@ namespace trace
          * Get the current state
          * @return 
          */
-        MediatorState getState() const;
+        MediatorState getState();
         
         
         /**
@@ -110,7 +110,7 @@ namespace trace
          * @param state
          * @return 
          */
-        bool isState( const MediatorState state ) const;
+        bool isState( const MediatorState state );
                 
         /* Socket instance */
         ::net::UdpSocket& m_socket;
