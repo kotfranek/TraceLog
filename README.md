@@ -14,9 +14,19 @@ Lightweight Logging/Tracing utility
 - support for the assertion mechanism with file name and line number
 - Java UDP log-viewer available soon
 
-## Dependencies
-Requires the [ESys][10] framework.<br>
-Set the ESYS_HOME environment variable before calling the make.
+## Building project
+Requires the [ESys][10] framework pre-built and `ESYS_HOME` environment variable
+set to directory containing [ESys][10].
+
+Example:
+
+	$ ESYS_HOME="${HOME}/ESys" make
+
+Two static libraries are created: *libtracelog.a* and *libtracecommon.a*.
+Both are necessary to use the Logger in own projects.
+
+- libtracecommon contains code for handling the LogEntry objects (serialize and deserialize)
+- libtracelog contains the logger implementation, including all standard BackEnds
 
 ## Todo
 - finish the UDP logger backend
