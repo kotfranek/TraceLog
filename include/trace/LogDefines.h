@@ -19,7 +19,8 @@ namespace trace
         LogLevel_Info,
         LogLevel_Debug,
         LogLevel_Developer,          
-        LogLevel_Internal
+        LogLevel_Internal,
+        LogLevel_Unknown
     };
     
     /* Maximum log entry length */

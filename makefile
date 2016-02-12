@@ -6,14 +6,14 @@ else
 endif
 
 TARGET = libtracelog
+TARGET_COMMON = libtracelogcommon
 OUTDIR = lib
-LIBS = -ltracelog -lesys
+LIBS = -ltracelog -ltracelogcommon -lesys
 CC = g++
 INCLUDES = include $(ESYS_HOME)/include
 LIBDIRS = lib/ $(ESYS_HOME)/lib
 
 EXAMPLE_TARGET = log-demo
-EXAMPLE_UDPCLIENT = udp-client
 EXAMPLE_OUTDIR = bin
 
 INCPARAMS=$(foreach d, $(INCLUDES),-I$d)
@@ -24,23 +24,27 @@ CFLAGS = -g -Wall -std=c++11 $(INCPARAMS) $(OPTFLAGS)
 LFLAGS = -Wall $(LIBDIRPARAMS)
 RUNARGS = 
 
-SRCS = src/trace/entry/Payload.cpp src/trace/entry/LogEntry.cpp
-SRCS += src/trace/Logger.cpp src/trace/log.cpp src/trace/ConsoleBackEnd.cpp src/trace/UdpBackEnd.cpp
+SRCS_COMMON = src/trace/entry/Payload.cpp src/trace/entry/LogEntry.cpp 
+SRCS_COMMON+= src/trace/entry/TraceLevelInfo.cpp
+
+SRCS = src/trace/Logger.cpp src/trace/log.cpp src/trace/ConsoleBackEnd.cpp src/trace/UdpBackEnd.cpp
 SRCS +=src/trace/FileBackEnd.cpp src/trace/LogPersistThread.cpp src/trace/TraceBuffer.cpp src/trace/TraceSharedContainer.cpp
 SRCS +=src/trace/UdpClientMediator.cpp
 
 EXAMPLE_SRCS = example/main.cpp
 
+OBJS_COMMON = $(subst .cpp,.o,$(SRCS_COMMON))
 OBJS = $(subst .cpp,.o,$(SRCS))
 
-.PHONY: default all $(EXAMPLE_TARGET) clean
+.PHONY: default all $(TARGET_COMMON) $(EXAMPLE_TARGET) clean
 
 default: all
-all: $(TARGET) $(EXAMPLE_TARGET)
+all: $(TARGET_COMMON) $(TARGET) $(EXAMPLE_TARGET)
 
-.PRECIOUS: $(TARGET) $(OBJS)
+.PRECIOUS: $(TARGET) $(TARGET_COMMON) $(OBJS)
 
-DEPS := $(OBJS:.o=.d)
+DEPS = $(OBJS_COMMON:.o=.d)
+DEPS += $(OBJS:.o=.d)
 DEPS += main.d
 
 -include $(DEPS)
@@ -49,17 +53,21 @@ DEPS += main.d
 	@$(CC) $(CFLAGS) -MM -MT $@ -MF $(patsubst %.o,%.d,$@) $<
 	$(CC) $(CFLAGS) -c $< -o $@
 
-
+# Main Library
 $(TARGET): $(OBJS)
 	@mkdir -p $(OUTDIR)
 	@ar rvs $(OUTDIR)/$@.a $(OBJS)
+	
+# Common Library, used also for the Client	
+$(TARGET_COMMON): $(OBJS_COMMON)
+	@mkdir -p $(OUTDIR)
+	@ar rvs $(OUTDIR)/$@.a $(OBJS_COMMON)	
 
 clean:
 	@rm -f $(OBJS)
 	@rm -f $(DEPS)	
-	@rm -f $(OUTDIR)/$(TARGET).a
+	@rm -f $(OUTDIR)/*.a
 	@rm -f $(EXAMPLE_OUTDIR)/$(EXAMPLE_TARGET)
-	@rm -f $(EXAMPLE_OUTDIR)/$(EXAMPLE_UDPCLIENT)
 	
 # Example code
 $(EXAMPLE_TARGET): main.o $(TARGET)

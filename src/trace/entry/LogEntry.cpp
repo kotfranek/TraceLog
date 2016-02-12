@@ -24,6 +24,7 @@
  */
 
 #include "trace/entry/LogEntry.h"
+#include "trace/entry/TraceLevelInfo.h"
 #include "esys/utils.h"
 
 #include <cstring>
@@ -120,7 +121,7 @@ std::string LogEntry::toString() const
     
     ::msecToTime( result, m_data.m_timestamp );
       
-    result << "|" << entry::Payload::traceLevelToChar( m_data.m_level ) << "|" << m_data.m_message;
+    result << "|" << TraceLevelInfo( m_data.m_level ).charId() << "|" << m_data.m_message;
     
     return result.str();
 }

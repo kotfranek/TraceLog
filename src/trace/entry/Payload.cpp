@@ -1,8 +1,28 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (c) 2016, Przemysław Podwapiński <p.podwapinski@gmail.com>
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY Przemysław Podwapiński ''AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL Przemysław Podwapiński BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
  */
+
 
 /* 
  * File:   Payload.cpp
@@ -12,56 +32,10 @@
  */
 
 #include "trace/entry/Payload.h"
+#include "trace/entry/TraceLevelInfo.h"
 #include "esys/utils.h"
-#include <cstring>
 
-namespace
-{
-    char traceLevelToChar( const ::trace::LogLevel level )
-    {
-        char result = 'x';
-        
-        switch( level )
-        {
-            case ::trace::LogLevel_Info:
-                result = 'I';
-                break;
-                
-            case ::trace::LogLevel_Debug:
-                result = 'D';
-                break;
-                
-            case ::trace::LogLevel_Warning:
-                result = 'W';
-                break;
-                
-            case ::trace::LogLevel_Error:
-                result = 'E';
-                break;
-                
-            case ::trace::LogLevel_Fatal:
-                result = 'F';
-                break;
-                
-            case ::trace::LogLevel_Assert:
-                result = 'A';
-                break;                
-                                
-            case ::trace::LogLevel_Internal:
-                result = 'L';
-                break;
-                                
-            case ::trace::LogLevel_Developer:
-                result = 'T';
-                break;                
-            
-            default:
-                break;
-                
-        }
-        return result;
-    }    
-}
+#include <cstring>
 
 namespace trace
 {
@@ -83,27 +57,30 @@ size_t Payload::serialize( uint8_t* output ) const
     
     offset += ::esys::serialize( output + offset, m_timestamp );
     
-    *( output + offset ) = traceLevelToChar( m_level );
+    *( output + offset ) = TraceLevelInfo( m_level ).charId();
     ++offset;
     
     offset += ::esys::serialize( output + offset, messageLength );
     
-    memcpy( output + offset, m_message, messageLength );
+    ::std::memcpy( output + offset, m_message, messageLength );
     offset += messageLength;
     
     return offset;
 }
 
 
-void Payload::deSerialize( uint8_t* input )
+void Payload::deserialize( uint8_t* input )
 {
+    input += ::esys::deserialize( input, m_timestamp );
     
-}
-
-
-char Payload::traceLevelToChar( const ::trace::LogLevel level )
-{
-    return ::traceLevelToChar( level );
+    m_level = TraceLevelInfo( char( *input ) ).level();
+    input += sizeof( char );
+    
+    uint16_t messageLength = 0U;
+    input += ::esys::deserialize( input, messageLength );
+    
+    ::std::memcpy( m_message, input, messageLength );
+    m_message[ messageLength ] = '\0';
 }
 
 }
