@@ -94,11 +94,14 @@ void UdpClientMediator::run()
 {
     ::net::Datagram fromClient;
     ::sys::StopWatch heartBeatTimer;
+    
+    /* Thread does stay idle for this time, not to block normal send operations */
+    uint32_t sleepTime = 50U;
        
     while( !isStopRequested() )
     {   
         /* Don't let it block too often */
-        sleep( 250U );
+        sleep( sleepTime );
         
         ::sys::TLockMutex l( m_udpMutex );
                 
@@ -106,16 +109,19 @@ void UdpClientMediator::run()
         {
             case Mediator_Disconnected:
             {
+                sleepTime = 50U;
+                
                 if ( waitForClient( fromClient, ::UDP_CLIENT_HANDSHAKE ) )
                 {
                     const ::net::Address& addr = fromClient.getAddress();                    
                     
                     if ( m_socket.connect( addr ) )
-                    {
-                        ::std::cout << "HANDSHAKE..." << ::std::endl;   
-                        sendStringToClient( ::UDP_SERVER_HANDSHAKE );
-
-                        setState( Mediator_WaitForClientId );
+                    {                       
+                        if ( sendStringToClient( ::UDP_SERVER_HANDSHAKE ) )
+                        {
+                            ::std::cout << "HANDSHAKE..." << ::std::endl;   
+                            setState( Mediator_WaitForClientId );
+                        }
                     }                                        
                 } 
                 break;                  
@@ -131,11 +137,17 @@ void UdpClientMediator::run()
                     {
                         ::std::cout << "IDENTIFIED..." << ::std::endl;   
                         m_clientId = clientId;
-                        
-                        heartBeatTimer.start();
-                        sendStringToClient( ::UDP_SERVER_HEARTBEAT );
-                        
-                        setState( Mediator_Connected );
+                                                
+                        if ( sendStringToClient( ::UDP_SERVER_HEARTBEAT ) )
+                        {
+                            sleepTime = 200U;
+                            heartBeatTimer.start();
+                            setState( Mediator_Connected );
+                        }  
+                        else
+                        {
+                            setState( Mediator_Disconnected );
+                        }
                     }
                 }
                 break;
@@ -146,8 +158,16 @@ void UdpClientMediator::run()
                 if ( heartBeatTimer.elapsed( ::UDP_SERVER_HEARTBEAT_PERIOD ) )
                 {
                     ::std::cout << "SEND HEARTBEAT" << ::std::endl;   
-                    heartBeatTimer.reStart();
-                    sendStringToClient( ::UDP_SERVER_HEARTBEAT );
+                    
+                    if ( sendStringToClient( ::UDP_SERVER_HEARTBEAT ) )
+                    {
+                        heartBeatTimer.reStart();
+                    }
+                    else
+                    {
+                        heartBeatTimer.stop();
+                        setState( Mediator_Disconnected );
+                    }
                 }
                 break;
             }
@@ -166,12 +186,12 @@ void UdpClientMediator::run()
 }
 
 
-void UdpClientMediator::sendStringToClient( const ::std::string& content )
+bool UdpClientMediator::sendStringToClient( const ::std::string& content )
 {
     ::net::Datagram s;
     s.setContent( content );                    
     
-    m_socket.send( s );    
+    return m_socket.send( s ); 
 }
 
 
@@ -212,7 +232,14 @@ bool UdpClientMediator::send( const net::Datagram& datagram )
     
     if ( isState( Mediator_Connected ) )
     {
-        result = m_socket.send( datagram );
+        if ( m_socket.send( datagram ) )
+        {
+            result = true;
+        }
+        else
+        {
+            setState( Mediator_Disconnected );
+        }
     }
     
     return result;

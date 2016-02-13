@@ -27,6 +27,7 @@
 #include "trace/Logger.h"
 #include "trace/FileBackEnd.h"
 #include "trace/ConsoleBackEnd.h"
+#include "trace/UdpBackEnd.h"
 
 namespace
 {
@@ -38,6 +39,9 @@ namespace
         
     /* File backend instance */
     ::trace::FileBackEnd S_BE_FILE;    
+    
+    /* UDP-Server backend instance */
+    ::trace::UdpBackEnd S_BE_UDP;       
 }
 
 namespace trace
@@ -57,6 +61,9 @@ namespace trace
                 
             case LogBackend_File:
                 return S_BE_FILE;
+                
+            case LogBackend_Udp:
+                return S_BE_UDP;
                 
             default:
                 return S_BE_CONSOLE;

@@ -89,7 +89,7 @@ namespace trace
          * @param auxiliary
          * @param content
          */
-        void sendStringToClient( const ::std::string& content );
+        bool sendStringToClient( const ::std::string& content );
         
         
         /**

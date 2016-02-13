@@ -42,7 +42,7 @@ namespace
     const ::std::string LOG_BACKEND_NAME( "UDP" ); 
     
     /* UDP Wait-For-Receive Timeout in ms */
-    const uint32_t UDP_RECIEVE_TIMEOUT_MS = 0U;
+    const uint32_t UDP_RECIEVE_TIMEOUT_MS = 1U;
     
     /* UDP Wait-For-Send Timeout in ms */
     const uint32_t UDP_SEND_TIMEOUT_MS = 5U;    

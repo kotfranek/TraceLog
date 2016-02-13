@@ -6,9 +6,9 @@ else
 endif
 
 TARGET = libtracelog
-TARGET_COMMON = libtracelogcommon
+TARGET_COMMON = libtracecommon
 OUTDIR = lib
-LIBS = -ltracelog -ltracelogcommon -lesys
+LIBS = -ltracelog -ltracecommon -lesys
 CC = g++
 INCLUDES = include $(ESYS_HOME)/include
 LIBDIRS = lib/ $(ESYS_HOME)/lib
