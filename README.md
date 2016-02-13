@@ -14,6 +14,18 @@ Lightweight Logging/Tracing utility
 - support for the assertion mechanism with file name and line number
 - Java UDP log-viewer available soon
 
+## Changelog
+### 0.1.0
+2016-02-13
+- UDP Backend
+- full async operation
+- export common (logger/viewer) code into separate library
+
+### 0.0.1
+2016-01-23
+- console & file Backend
+- no async operation (persist-operations done in the caller thread)
+
 ## Building project
 Requires the [ESys][10] framework pre-built and `ESYS_HOME` environment variable
 set to directory containing [ESys][10].
@@ -29,7 +41,6 @@ Both are necessary to use the Logger in own projects.
 - libtracelog contains the logger implementation, including all standard BackEnds
 
 ## Todo
-- finish the UDP logger backend
 - file i/o-error handling
 - process-id dependent output file name
 - custom assertion handler
