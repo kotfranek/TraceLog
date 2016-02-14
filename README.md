@@ -15,6 +15,11 @@ Lightweight Logging/Tracing utility
 - Java UDP log-viewer available soon
 
 ## Changelog
+### 0.1.1
+2016-02-14
+- LogBackend API modifications: use the ESys AutoString implementation
+- FileBackEnd log file naming related to Process-Id	
+
 ### 0.1.0
 2016-02-13
 - UDP Backend

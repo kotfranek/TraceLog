@@ -57,7 +57,7 @@ namespace trace
         /**
         * @see ILogBackEnd
         */      
-        virtual const ::std::string& getName() const;        
+        virtual const ::esys::TString31& getName() const;        
         
     private:
         UdpBackEnd& operator=(const UdpBackEnd& other); 

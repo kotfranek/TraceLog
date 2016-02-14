@@ -67,7 +67,7 @@ private:
     /**
      * @see ILogBackEnd
      */      
-    virtual const ::std::string& getName() const;
+    virtual const ::esys::TString31& getName() const;
        
     /**
      * Persist the entries buffer

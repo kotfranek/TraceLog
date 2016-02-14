@@ -39,7 +39,7 @@
 namespace
 {
     /* Backend name */
-    const ::std::string LOG_BACKEND_NAME( "UDP" ); 
+    const ::esys::TString31 LOG_BACKEND_NAME( "UDP" ); 
     
     /* UDP Wait-For-Receive Timeout in ms */
     const uint32_t UDP_RECIEVE_TIMEOUT_MS = 1U;
@@ -98,7 +98,7 @@ void UdpBackEnd::onShutdown()
 }
 
 
-const ::std::string& UdpBackEnd::getName() const
+const ::esys::TString31& UdpBackEnd::getName() const
 {
     return ::LOG_BACKEND_NAME;
 }

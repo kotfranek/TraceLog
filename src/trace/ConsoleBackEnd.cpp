@@ -32,7 +32,7 @@
 namespace
 {
     /* Backend name */
-    const ::std::string LOG_BACKEND_NAME( "Console" );    
+    const ::esys::TString31 LOG_BACKEND_NAME( "Console" );    
 }
 
 namespace trace
@@ -68,7 +68,7 @@ bool ConsoleBackEnd::add( const entry::LogEntry& entry )
 
 
 
-const ::std::string& ConsoleBackEnd::getName() const
+const ::esys::TString31& ConsoleBackEnd::getName() const
 {
     return ::LOG_BACKEND_NAME;
 }

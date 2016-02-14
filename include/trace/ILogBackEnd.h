@@ -26,7 +26,7 @@
 #ifndef ILOGBACKEND_H
 #define ILOGBACKEND_H
 
-#include <string>
+#include "esys/AutoString.h"
 
 namespace trace
 {       
@@ -70,7 +70,7 @@ namespace trace
          * Get the BackEnd's name
          * @result Name-String reference
          */
-        virtual const ::std::string& getName() const = 0;
+        virtual const ::esys::TString31& getName() const = 0;
         
     protected:
             

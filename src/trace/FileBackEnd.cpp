@@ -27,14 +27,13 @@
 #include "trace/ConsoleBackEnd.h"
 #include "trace/entry/LogEntry.h"
 #include "sys/StopWatch.h"
+#include "sys/SystemInfo.h"
+#include "esys/AutoString.h"
 #include <iostream>
 
 
 namespace
-{
-    /* Default file name */
-    const char* LOG_FILE_NAME = "log_trace.log";
-    
+{    
     /* Open Mode: Binary Write, Truncate if exists */
     const ::std::ios_base::openmode LOG_FILE_OPEN_MODE = 
         ::std::ios_base::in | ::std::ios_base::out | ::std::ios_base::binary | ::std::ios_base::trunc;        
@@ -49,10 +48,19 @@ namespace
     const uint8_t LOG_FILE_HEADER[] = { 'l', 'o', 'g', '1' };
     
     /* Backend name */
-    const ::std::string LOG_BACKEND_NAME( "File" );
+    const ::esys::TString31 LOG_BACKEND_NAME( "File" );
     
     /* Console backend used for Error tracing */
     ::trace::ConsoleBackEnd S_BE_CONSOLE;
+    
+    /**
+     * Generate the file name based on the Process Id
+     * @param name
+     */
+    void generateFileName( ::esys::TString63& name )
+    {
+        name.c_format( "tracelog_%d.log", ::sys::SystemInfo::getOwnProcessId() );
+    }
 };
 
 namespace trace
@@ -71,7 +79,10 @@ FileBackEnd::FileBackEnd()
 
 void FileBackEnd::onRegister()
 {    
-    m_file.open( LOG_FILE_NAME, LOG_FILE_OPEN_MODE );
+    ::esys::TString63 fileName;    
+    ::generateFileName( fileName );
+    
+    m_file.open( fileName.c_str() , LOG_FILE_OPEN_MODE );
     
     if ( m_file.is_open() )
     {
@@ -107,7 +118,7 @@ bool FileBackEnd::add( const entry::LogEntry& entry )
 }
 
 
-const ::std::string& FileBackEnd::getName() const
+const ::esys::TString31& FileBackEnd::getName() const
 {
     return LOG_BACKEND_NAME;
 }

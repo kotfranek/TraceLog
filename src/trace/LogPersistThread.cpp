@@ -36,9 +36,9 @@ namespace
     const uint32_t NEW_ENTRY_TIMEOUT_MS = 250U;
     
     
-    inline ::std::string backendRegisteredText( const ::std::string& backendName )
+    inline ::esys::TString63 backendRegisteredText( const ::esys::TString31& backendName )
     {
-        ::std::string descr( "BackEnd '" );
+        ::esys::TString63 descr( "BackEnd '" );
         descr.append( backendName );
         descr.append( "' registered" );   
         
