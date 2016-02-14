@@ -65,16 +65,18 @@ $(TARGET_COMMON): $(OBJS_COMMON)
 
 clean:
 	@rm -f $(OBJS)
+	@rm -f $(OBJS_COMMON)
 	@rm -f $(DEPS)	
 	@rm -f $(OUTDIR)/*.a
+	@rm -f example/main.o
 	@rm -f $(EXAMPLE_OUTDIR)/$(EXAMPLE_TARGET)
 	
 # Example code
-$(EXAMPLE_TARGET): main.o $(TARGET)
+$(EXAMPLE_TARGET): example/main.o $(TARGET)
 	@mkdir -p $(EXAMPLE_OUTDIR)
 	$(CC) $< $(LFLAGS) $(LIBS) -o $(EXAMPLE_OUTDIR)/$@ -pthread $(OPTFLAGS)
 
 
-main.o: example/main.cpp
+example/main.o: example/main.cpp
 	@$(CC) $(CFLAGS) -MM -MT $@ -MF $(patsubst %.o,%.d,$@) $<
 	$(CC) $(CFLAGS) -c $< -o $@	
