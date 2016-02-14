@@ -10,7 +10,7 @@ namespace
     {
     public:
         explicit Th1( const uint32_t id )
-            : ::sys::AbstractThread( ::std::to_string( id ) )
+            : ::sys::AbstractThread( ::std::to_string( id ).c_str() )
             , m_char( 'A' + id )
         {
         }
@@ -91,7 +91,7 @@ private:
 
 int32_t main( int argc, const char * const * argv )
 {
-    LOGGER_INIT_BE_FILE;
+    LOGGER_INIT_BE_UDP;
     
     LOG_INFO_C( "App Started: %c", 'a' );
     int32_t result = ::DemoApp().run( argc, argv );
