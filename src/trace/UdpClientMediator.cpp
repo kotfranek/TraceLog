@@ -42,6 +42,9 @@ namespace
     /* UDP Client Disconnect */
     const ::std::string UDP_CLIENT_ID( "TRACELOG_UDP_CLIENT_ID" );    
     
+    /* Server identifier */
+    const ::std::string UDP_SERVER_NAME( "UDP-TraceLog-Client-0.1.2" );
+    
     /* UDP Server identification */
     const ::std::string UDP_SERVER_HANDSHAKE( "TRACELOG_UDP_SRV_HS" );    
     
@@ -117,7 +120,7 @@ void UdpClientMediator::run()
                     
                     if ( m_socket.connect( addr ) )
                     {                       
-                        if ( sendStringToClient( ::UDP_SERVER_HANDSHAKE ) )
+                        if ( sendStringToClient( ::UDP_SERVER_HANDSHAKE + ::UDP_SERVER_NAME ) )
                         {
                             ::std::cout << "HANDSHAKE..." << ::std::endl;   
                             setState( Mediator_WaitForClientId );
