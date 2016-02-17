@@ -30,7 +30,7 @@ namespace trace
     static const size_t LOG_CACHE_SIZE = 512U; 
     
     /* Log FileBackend cache size */
-    static const size_t LOG_FILE_BACKEND_CACHE_SIZE = 32U;         
+    static const size_t LOG_FILE_BACKEND_CACHE_SIZE = 96U;         
 };
 
 #endif

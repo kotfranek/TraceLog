@@ -28,14 +28,12 @@
 #include "trace/entry/LogEntry.h"
 #include "sys/StopWatch.h"
 #include "esys/AutoString.h"
-#include <iostream>
 
 
 namespace
 {    
     /* Open Mode: Binary Write, Truncate if exists */
-    const ::std::ios_base::openmode LOG_FILE_OPEN_MODE = 
-        ::std::ios_base::in | ::std::ios_base::out | ::std::ios_base::binary | ::std::ios_base::trunc;        
+    const char* LOG_FILE_OPEN_MODE = "wb";
         
     /* Maximal Single log Entry binary representation length */
     const size_t MAX_LOG_ENTRY_STREAM_SIZE = sizeof( ::trace::entry::Payload );
@@ -51,6 +49,17 @@ namespace
     
     /* Console backend used for Error tracing */
     ::trace::ConsoleBackEnd S_BE_CONSOLE;
+    
+    
+    /**
+     * Check if the given file is valid/opened
+     * @param file
+     * @return 
+     */
+    inline bool isOpened( const ::std::FILE* file )
+    {
+        return NULL != file;
+    }
 };
 
 namespace trace
@@ -61,7 +70,7 @@ FileBackEnd::FileBackEnd()
     , m_errorToConsole( true )
     , m_index( 0U )
     , m_entries()
-    , m_file()
+    , m_file( NULL )
 {
 
 }
@@ -72,21 +81,21 @@ void FileBackEnd::onRegister( const ::sys::TPid pid )
     ::esys::TString63 fileName;    
     fileName.c_format( "tracelog_%d.log", pid );
     
-    m_file.open( fileName.c_str() , ::LOG_FILE_OPEN_MODE );
+    m_file = ::std::fopen( fileName.c_str() , ::LOG_FILE_OPEN_MODE );
     
-    if ( m_file.is_open() )
+    if ( ::isOpened( m_file ) )
     {
-        m_file.write( reinterpret_cast<const char*>( LOG_FILE_HEADER ), sizeof( LOG_FILE_HEADER ) );
+        ::std::fwrite( LOG_FILE_HEADER, sizeof( LOG_FILE_HEADER ), 1U,  m_file );        
     }
 }
 
 
 void FileBackEnd::onShutdown()
 {    
-    if ( m_file.is_open() )
+    if ( ::isOpened( m_file ) )
     {
         persistEntries();
-        m_file.close();
+        ::std::fclose( m_file );
     }
 }
 
@@ -118,14 +127,14 @@ void FileBackEnd::persistEntries()
 {
     ::sys::StopWatch stWatch( true );
 
-    if ( m_file.is_open() && 0U != m_index )
+    if ( ::isOpened( m_file ) && 0U != m_index )
     {
         size_t bytesToWrite = 0U;
         
         for ( size_t i = 0U ; i < m_index; i++ )
         {            
              bytesToWrite = m_entries[ i ].exposeData().serialize( ENTRY_BUFFER );
-             m_file.write( reinterpret_cast<const char*>( ENTRY_BUFFER ), bytesToWrite );
+             ::std::fwrite( ENTRY_BUFFER, bytesToWrite, 1U, m_file );
         }
     }
 }

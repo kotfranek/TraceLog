@@ -27,8 +27,7 @@
 #define LOGGERBACKEND_H
 
 #include <stdint.h>
-#include <string>
-#include <fstream>
+#include <cstdio>
 
 #include "trace/backend/ILogBackEnd.h"
 #include "trace/LogDefines.h"
@@ -91,7 +90,7 @@ private:
     entry::LogEntry m_entries[ LOG_FILE_BACKEND_CACHE_SIZE ];
     
     /* Output file handle */
-    ::std::fstream m_file;
+    ::std::FILE* m_file;
 };
 
 };
