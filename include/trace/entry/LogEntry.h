@@ -52,6 +52,12 @@ namespace trace
             {
                 return m_data;
             }
+            
+            /* Expose complete log entry R/W */
+            entry::Payload& exposeData()
+            {
+                return m_data;
+            }            
 
             /* Thest the LogLevel */
             bool isLevel( const LogLevel level ) const

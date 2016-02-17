@@ -37,6 +37,24 @@
 
 #include <cstring>
 
+namespace
+{
+    template<typename T>bool readAndDeserialize( char* buffer, T& value, ::std::istream& stream )
+    {
+        bool result = false;
+        
+        stream.read( buffer, sizeof( T ) );
+        
+        if ( sizeof( T ) == stream.gcount() )
+        {
+            ::esys::deserialize( buffer, value );
+            result = true;            
+        }
+        
+        return result;
+    }
+}
+
 namespace trace
 {
 namespace entry
@@ -81,6 +99,50 @@ void Payload::deserialize( uint8_t* input )
     
     ::std::memcpy( m_message, input, messageLength );
     m_message[ messageLength ] = '\0';
+}
+
+
+bool Payload::deserialize( ::std::istream& stream )
+{
+    bool result = false;
+    
+    if ( ::readAndDeserialize( m_message, m_timestamp, stream ) )
+    {
+        stream.read( m_message, sizeof( char ) );
+        
+        if ( sizeof( char ) ==  stream.gcount() )
+        {
+            m_level = TraceLevelInfo( m_message[ 0 ] ).level();
+        }  
+        else
+        {
+            printf( "bieda1\n" );
+        }
+    } 
+    else
+    {
+        printf( "Bieda2\n" );
+    }
+    
+    uint16_t messageLength = 0U;
+    
+    if ( ::readAndDeserialize( m_message, messageLength, stream ) )
+    {    
+        if ( messageLength <= LOG_MESSAGE_SIZE_MAX )
+        {
+            printf( "message length: %u\n", messageLength );
+            stream.read( m_message, messageLength );
+            m_message[ messageLength ] = '\0';
+            result = messageLength == stream.gcount();
+        }
+        else
+        {
+            printf( "Wrong message length: %u\n", messageLength );
+            result = false;
+        }
+    }
+    
+    return result;
 }
 
 }

@@ -35,6 +35,7 @@
 #define PAYLOAD_H
 
 #include "trace/LogDefines.h"
+#include <istream>
 
 namespace trace
 {
@@ -67,6 +68,9 @@ namespace trace
              * @param input
              */
             void deserialize( uint8_t* input );
+            
+            
+            bool deserialize( ::std::istream& stream );
         };        
     }
 }
