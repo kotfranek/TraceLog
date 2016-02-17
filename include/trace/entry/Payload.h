@@ -70,6 +70,11 @@ namespace trace
             void deserialize( uint8_t* input );
             
             
+            /**
+             * Fill the payload from the input stream
+             * @param stream
+             * @return true on success
+             */
             bool deserialize( ::std::istream& stream );
         };        
     }

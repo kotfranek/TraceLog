@@ -97,8 +97,11 @@ void Payload::deserialize( uint8_t* input )
     uint16_t messageLength = 0U;
     input += ::esys::deserialize( input, messageLength );
     
-    ::std::memcpy( m_message, input, messageLength );
-    m_message[ messageLength ] = '\0';
+    if ( messageLength <= LOG_MESSAGE_SIZE_MAX )
+    {    
+        ::std::memcpy( m_message, input, messageLength );
+        m_message[ messageLength ] = '\0';
+    }
 }
 
 
@@ -113,34 +116,20 @@ bool Payload::deserialize( ::std::istream& stream )
         if ( sizeof( char ) ==  stream.gcount() )
         {
             m_level = TraceLevelInfo( m_message[ 0 ] ).level();
-        }  
-        else
-        {
-            printf( "bieda1\n" );
-        }
-    } 
-    else
-    {
-        printf( "Bieda2\n" );
-    }
-    
-    uint16_t messageLength = 0U;
-    
-    if ( ::readAndDeserialize( m_message, messageLength, stream ) )
-    {    
-        if ( messageLength <= LOG_MESSAGE_SIZE_MAX )
-        {
-            printf( "message length: %u\n", messageLength );
-            stream.read( m_message, messageLength );
-            m_message[ messageLength ] = '\0';
-            result = messageLength == stream.gcount();
-        }
-        else
-        {
-            printf( "Wrong message length: %u\n", messageLength );
-            result = false;
-        }
-    }
+            
+            uint16_t messageLength = 0U;
+
+            if ( ::readAndDeserialize( m_message, messageLength, stream ) )
+            {    
+                if ( messageLength <= LOG_MESSAGE_SIZE_MAX )
+                {
+                    stream.read( m_message, messageLength );
+                    m_message[ messageLength ] = '\0';
+                    result = messageLength == stream.gcount();
+                }
+            }            
+        }          
+    }     
     
     return result;
 }
