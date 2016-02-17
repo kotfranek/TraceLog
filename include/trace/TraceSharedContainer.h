@@ -53,7 +53,7 @@ public:
     
     
     /**
-     * Read all available entries.
+     * Read all available entries if condition was set within the given timeout
      * Thread safe.
      * @arg timeout Max waiting time
      * @arg [out] entry
@@ -61,9 +61,24 @@ public:
      */
     size_t waitUntilAvailableAndRead( const uint32_t timeout, entry::LogEntry* entryBuffer );
     
+    /**
+     * Read all available entries.
+     * Thread safe.
+     * @param entryBuffer
+     * @return 
+     */
+    size_t readAllRemaining( entry::LogEntry* entryBuffer );
+    
 private:    
     TraceSharedContainer(const TraceSharedContainer& other);
     TraceSharedContainer& operator=(const TraceSharedContainer& other);
+    
+    /**
+     * Get all buffer
+     * @param entryBuffer
+     * @return number of elements read
+     */
+    size_t readAll( entry::LogEntry* entryBuffer );
     
     /* Thread safety access mutex */
     ::std::mutex m_mutex;

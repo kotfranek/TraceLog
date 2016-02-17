@@ -41,6 +41,7 @@ Logger::Logger()
     , m_buffer()
     , m_persistThread( m_buffer )
     , m_backEnd( NULL )
+    , m_droppedCount( 0U )
 {
 
 }
@@ -80,7 +81,11 @@ void Logger::logV( const LogLevel level, const char* format, ... )
     if ( m_buffer.add( entry ) )
     {
         
-    }     
+    }   
+    else
+    {
+        ++m_droppedCount;
+    }
     
     va_end ( args );    
 }
@@ -99,6 +104,7 @@ void Logger::shutDown()
     
     if ( NULL != m_backEnd )
     {
+        logV( LogLevel_Internal, "Dropped %u messages", m_droppedCount );
         m_persistThread.requestStop();
         m_persistThread.join();
         

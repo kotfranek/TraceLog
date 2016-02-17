@@ -61,20 +61,35 @@ size_t TraceSharedContainer::waitUntilAvailableAndRead( const uint32_t timeout, 
     
     if ( std::cv_status::no_timeout == m_condDataAvail.wait_for( l, ::std::chrono::milliseconds( timeout ) ) )
     {
-        result = m_buffer.size();        
-        
-        for( size_t i = 0U; i < result; i++ )
-        {
-            if ( m_buffer.read( entryBuffer[ i ] ) )
-            {
-                //::std::cout << "B" << ::std::endl;            
-            }
-        }        
+        result = readAll( entryBuffer );
     }
     
     return result;
 }
 
+
+size_t TraceSharedContainer::readAllRemaining( entry::LogEntry* entryBuffer )
+{
+    ::sys::TLockUnique l( m_mutex );
+    
+    return readAll( entryBuffer );
+}
+
+
+size_t TraceSharedContainer::readAll( entry::LogEntry* entryBuffer )
+{
+    const size_t result = m_buffer.size();
+
+    for( size_t i = 0U; i < result; i++ )
+    {
+        if ( m_buffer.read( entryBuffer[ i ] ) )
+        {
+            //::std::cout << "B" << ::std::endl;            
+        }
+    }     
+    
+    return result;    
+}
 
 
 TraceSharedContainer::~TraceSharedContainer()

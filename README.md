@@ -47,9 +47,7 @@ Both are necessary to use the Logger in own projects.
 
 ## Todo
 - file i/o-error handling
-- process-id dependent output file name
 - custom assertion handler
-- improve code documentation
 
 Copyright &copy; 2016 [Przemysław Podwapiński][98].<br>
 Distributed under the [Simplified BSD License][99].

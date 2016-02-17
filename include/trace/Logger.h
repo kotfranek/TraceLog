@@ -107,6 +107,9 @@ namespace trace
                
         /* Log backend */
         backend::ILogBackEnd* m_backEnd;
+        
+        /* Dropped messages counter */
+        uint32_t m_droppedCount;
     };
 
 };

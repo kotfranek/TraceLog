@@ -91,6 +91,14 @@ void LogPersistThread::run()
         }
     }
     
+    const size_t count = m_traceContainer.readAllRemaining( m_entries );
+
+    for ( size_t i = 0U; i < count; i++ )
+    {
+        assertion = m_entries[ i ].isLevel( LogLevel_Assert );
+        m_backEnd->add( m_entries[ i ] );
+    }
+    
     /* Add the closing entry and shutdown the LogBackEnd */
     m_backEnd->add( entry::LogEntry( LogLevel_Internal, "Shutdown the BackEnd" ) );    
     m_backEnd->onShutdown();

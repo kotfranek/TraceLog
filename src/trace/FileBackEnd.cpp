@@ -93,7 +93,7 @@ void FileBackEnd::onShutdown()
 
 bool FileBackEnd::add( const entry::LogEntry& entry )
 {
-    if ( LOG_CACHE_SIZE <= m_index )
+    if ( LOG_FILE_BACKEND_CACHE_SIZE <= m_index )
     {
         persistEntries();
         m_index = 0U;
@@ -128,8 +128,6 @@ void FileBackEnd::persistEntries()
              m_file.write( reinterpret_cast<const char*>( ENTRY_BUFFER ), bytesToWrite );
         }
     }
-       
-    ::std::cout << "persistEntries("<< m_index <<")-> took [" << stWatch.stop() << "] us" << std::endl;
 }
 
 

@@ -28,7 +28,7 @@ namespace
                 }
                 
                 LOG_INFO_C( "TH: %c, i = %u", m_char, i );
-                sleep( 50 + ( m_char * 2U ) );
+                sleep( 5 + ( m_char * 2U ) );
                 --i;
             }
         }
@@ -52,18 +52,14 @@ private:
     virtual int32_t onRun( const TStringVector& args )
     {       
         const size_t NUM_TH = 26U;
-        
-        ::sys::StopWatch sw( true );
-        
+                
         Th1* threads[ NUM_TH ];
         
         for ( size_t i = 0U; i < NUM_TH; i++ )
         {
             threads[ i ] = new Th1( i );
             threads[ i ]->start();      
-        }
-        
-        //LOG_ASSERT( false, "poop!" );
+        }        
         
         if ( waitForExit( 15000U ) )
         {
@@ -82,7 +78,17 @@ private:
             delete threads[ i ];
         }
         
-        LOG_INFO_C( "Took: %u", sw.stop() );
+        /* Uncomment this part to enable the benchmark
+        LOG_INFO_C( "Start The Benchmark" );
+        ::sys::StopWatch sw( true );
+
+        for ( uint32_t i = 0; i < 100000; i++ )
+        {
+            LOG_INFO_C("TEST: %u and some text here :-)", i);       
+        }
+        
+        LOG_INFO_C( "Took: %u ms", sw.stop() / 1000U );
+        */
         
         return 0;
     }
@@ -91,7 +97,7 @@ private:
 
 int32_t main( int argc, const char * const * argv )
 {
-    LOGGER_INIT_BE_UDP;
+    LOGGER_INIT_BE_FILE;
     
     LOG_INFO_C( "App Started: %c", 'a' );
     int32_t result = ::DemoApp().run( argc, argv );

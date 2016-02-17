@@ -1,7 +1,7 @@
 ifdef ESYS_HOME
     $(info ESys location is '$(ESYS_HOME)')
 else
-    $(warning ESYS_HOME environment variable undefined)
+    $(warning ESYS_HOME environment variable undefined, using default)
     ESYS_HOME=../ESys
 endif
 
@@ -19,7 +19,7 @@ EXAMPLE_OUTDIR = bin
 INCPARAMS=$(foreach d, $(INCLUDES),-I$d)
 LIBDIRPARAMS=$(foreach d, $(LIBDIRS),-L$d)
 
-OPTFLAGS = -s -Os
+OPTFLAGS = -s -O3
 CFLAGS = -g -Wall -std=c++11 $(INCPARAMS) $(OPTFLAGS)
 LFLAGS = -Wall $(LIBDIRPARAMS)
 RUNARGS = 
@@ -45,7 +45,7 @@ all: $(TARGET_COMMON) $(TARGET) $(EXAMPLE_TARGET)
 
 DEPS = $(OBJS_COMMON:.o=.d)
 DEPS += $(OBJS:.o=.d)
-DEPS += main.d
+DEPS += example/main.d
 
 -include $(DEPS)
 
@@ -72,7 +72,7 @@ clean:
 	@rm -f $(EXAMPLE_OUTDIR)/$(EXAMPLE_TARGET)
 	
 # Example code
-$(EXAMPLE_TARGET): example/main.o $(TARGET)
+$(EXAMPLE_TARGET): example/main.o $(TARGET) $(TARGET_COMMON)
 	@mkdir -p $(EXAMPLE_OUTDIR)
 	$(CC) $< $(LFLAGS) $(LIBS) -o $(EXAMPLE_OUTDIR)/$@ -pthread $(OPTFLAGS)
 

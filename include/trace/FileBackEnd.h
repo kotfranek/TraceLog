@@ -35,7 +35,7 @@
 #include "trace/entry/LogEntry.h"
 
 namespace trace
-{
+{    
 
 class FileBackEnd : public backend::ILogBackEnd
 {
@@ -88,7 +88,7 @@ private:
     size_t m_index;    
     
     /* Log Entries */
-    entry::LogEntry m_entries[ LOG_CACHE_SIZE ];
+    entry::LogEntry m_entries[ LOG_FILE_BACKEND_CACHE_SIZE ];
     
     /* Output file handle */
     ::std::fstream m_file;
