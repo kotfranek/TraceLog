@@ -137,8 +137,7 @@ void UdpClientMediator::run()
                 if ( receiveStringFromClient( fromClient, clientId ) )
                 {
                     if ( 0 == clientId.find( UDP_CLIENT_ID ) )
-                    {
-                        ::std::cout << "IDENTIFIED..." << ::std::endl;   
+                    { 
                         m_clientId = clientId;
                                                 
                         if ( sendStringToClient( ::UDP_SERVER_HEARTBEAT ) )
@@ -159,9 +158,7 @@ void UdpClientMediator::run()
             case Mediator_Connected:
             {
                 if ( heartBeatTimer.elapsed( ::UDP_SERVER_HEARTBEAT_PERIOD ) )
-                {
-                    ::std::cout << "SEND HEARTBEAT" << ::std::endl;   
-                    
+                {                    
                     if ( sendStringToClient( ::UDP_SERVER_HEARTBEAT ) )
                     {
                         heartBeatTimer.reStart();

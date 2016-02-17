@@ -30,6 +30,9 @@
 
 namespace trace
 {
+    /**
+     * TraceLog native Backends
+     */
     enum LogBackend
     {
         LogBackend_Console,

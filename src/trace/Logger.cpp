@@ -56,6 +56,10 @@ void Logger::setBackEnd( backend::ILogBackEnd* backEnd )
         m_persistThread.setBackEnd( backEnd );
         m_persistThread.start();
     }
+    else
+    {
+        log( LogLevel_Warning, "Trying to change backend while Log running" );
+    }
 }
 
 
