@@ -22,13 +22,14 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
+#include <cstdlib>
+#include <iostream>
+
+#include "sys/SystemInfo.h"
 
 #include "trace/LogPersistThread.h"
 #include "trace/backend/ILogBackEnd.h"
 #include "trace/TraceSharedContainer.h"
-
-#include <cstdlib>
-#include <iostream>
 
 namespace
 {
@@ -68,7 +69,7 @@ void LogPersistThread::setBackEnd( backend::ILogBackEnd* backEnd )
 
 void LogPersistThread::run()
 {   
-    m_backEnd->onRegister();
+    m_backEnd->onRegister( ::sys::SystemInfo::getOwnProcessId() );
     m_backEnd->add( entry::LogEntry( LogLevel_Internal, ::backendRegisteredText( m_backEnd->getName() ).c_str() ) );   
     
     bool assertion = false;

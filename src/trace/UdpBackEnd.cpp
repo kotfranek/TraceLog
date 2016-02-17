@@ -63,7 +63,7 @@ UdpBackEnd::UdpBackEnd()
 }
 
 
-void UdpBackEnd::onRegister()
+void UdpBackEnd::onRegister( const ::sys::TPid pid )
 {         
     if ( m_socket.open( UDP_LISTEN_PORT ) )
     {        

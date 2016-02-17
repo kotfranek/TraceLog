@@ -55,7 +55,7 @@ namespace trace
         /**
         * @see ILogBackEnd
         */
-        virtual void onRegister();
+        virtual void onRegister( const ::sys::TPid pid );
         
         /**
         * @see ILogBackEnd

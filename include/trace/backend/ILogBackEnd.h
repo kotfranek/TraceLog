@@ -27,6 +27,7 @@
 #define ILOGBACKEND_H
 
 #include "esys/AutoString.h"
+#include "sys/ESysDefs.h"
 
 namespace trace
 {       
@@ -59,8 +60,9 @@ namespace trace
 
             /**
              * Called on BackEnd register 
+             * ProcessId as argument
              */
-            virtual void onRegister() = 0;
+            virtual void onRegister( const ::sys::TPid pid ) = 0;
 
 
             /**

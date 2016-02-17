@@ -44,7 +44,7 @@ ConsoleBackEnd::ConsoleBackEnd()
 }
 
 
-void ConsoleBackEnd::onRegister()
+void ConsoleBackEnd::onRegister( const ::sys::TPid pid )
 {
 
 }

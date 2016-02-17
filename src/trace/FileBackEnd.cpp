@@ -27,7 +27,6 @@
 #include "trace/ConsoleBackEnd.h"
 #include "trace/entry/LogEntry.h"
 #include "sys/StopWatch.h"
-#include "sys/SystemInfo.h"
 #include "esys/AutoString.h"
 #include <iostream>
 
@@ -52,15 +51,6 @@ namespace
     
     /* Console backend used for Error tracing */
     ::trace::ConsoleBackEnd S_BE_CONSOLE;
-    
-    /**
-     * Generate the file name based on the Process Id
-     * @param name
-     */
-    void generateFileName( ::esys::TString63& name )
-    {
-        name.c_format( "tracelog_%d.log", ::sys::SystemInfo::getOwnProcessId() );
-    }
 };
 
 namespace trace
@@ -77,12 +67,12 @@ FileBackEnd::FileBackEnd()
 }
 
 
-void FileBackEnd::onRegister()
+void FileBackEnd::onRegister( const ::sys::TPid pid )
 {    
     ::esys::TString63 fileName;    
-    ::generateFileName( fileName );
+    fileName.c_format( "tracelog_%d.log", pid );
     
-    m_file.open( fileName.c_str() , LOG_FILE_OPEN_MODE );
+    m_file.open( fileName.c_str() , ::LOG_FILE_OPEN_MODE );
     
     if ( m_file.is_open() )
     {
