@@ -35,47 +35,51 @@
 
 namespace trace
 {
-class ILogBackEnd;
-class TraceSharedContainer;
+    namespace backend
+    {
+        class ILogBackEnd;
+    }
+    
+    class TraceSharedContainer;
 
-class LogPersistThread : public ::sys::AbstractThread
-{
-public:
-    explicit LogPersistThread( TraceSharedContainer& traceContainer );
-    ~LogPersistThread();
-    
-    /**
-     * Set the LogBackEnd
-     * Call this only before the start!
-     * @arg backEnd LogBackEnd implementation
-     */
-    void setBackEnd( ILogBackEnd* backEnd );
-    
-private:
-    
-    /**
-     * @see ::sys::AbstractThread
-     */
-    virtual void run();
-    
-    /* Prohibit copying */
-    LogPersistThread(const LogPersistThread& other);
-    
-    /* Prohibit copying */
-    LogPersistThread& operator=(const LogPersistThread& other);  
-    
-    /* Trace Container instance */
-    TraceSharedContainer& m_traceContainer;
-    
-    /* LogBackend implementation */
-    ILogBackEnd* m_backEnd;    
-        
-    /* Log Cache index */
-    size_t m_index;    
-    
-    /* Log Entries */
-    entry::LogEntry m_entries[ LOG_CACHE_SIZE ];    
-};
+    class LogPersistThread : public ::sys::AbstractThread
+    {
+    public:
+        explicit LogPersistThread( TraceSharedContainer& traceContainer );
+        ~LogPersistThread();
+
+        /**
+         * Set the LogBackEnd
+         * Call this only before the start!
+         * @arg backEnd LogBackEnd implementation
+         */
+        void setBackEnd( backend::ILogBackEnd* backEnd );
+
+    private:
+
+        /**
+         * @see ::sys::AbstractThread
+         */
+        virtual void run();
+
+        /* Prohibit copying */
+        LogPersistThread(const LogPersistThread& other);
+
+        /* Prohibit copying */
+        LogPersistThread& operator=(const LogPersistThread& other);  
+
+        /* Trace Container instance */
+        TraceSharedContainer& m_traceContainer;
+
+        /* LogBackend implementation */
+        backend::ILogBackEnd* m_backEnd;    
+
+        /* Log Cache index */
+        size_t m_index;    
+
+        /* Log Entries */
+        entry::LogEntry m_entries[ LOG_CACHE_SIZE ];    
+    };
 
 }; // 
 

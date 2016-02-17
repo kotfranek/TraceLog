@@ -32,7 +32,10 @@
 
 namespace trace
 {       
-    class ILogBackEnd;
+    namespace backend
+    {
+        class ILogBackEnd;
+    }
         
     class ILogger
     {        
@@ -70,7 +73,7 @@ namespace trace
          * Set the backend implementation 
          * @arg backEnd Valid implementation
          */
-        virtual void setBackEnd( ILogBackEnd* backEnd ) = 0;
+        virtual void setBackEnd( backend::ILogBackEnd* backEnd ) = 0;
         
         
         /**

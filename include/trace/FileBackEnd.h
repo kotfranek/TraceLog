@@ -30,14 +30,14 @@
 #include <string>
 #include <fstream>
 
-#include "trace/ILogBackEnd.h"
+#include "trace/backend/ILogBackEnd.h"
 #include "trace/LogDefines.h"
 #include "trace/entry/LogEntry.h"
 
 namespace trace
 {
 
-class FileBackEnd : public ILogBackEnd
+class FileBackEnd : public backend::ILogBackEnd
 {
 public:
         

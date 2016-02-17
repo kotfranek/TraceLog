@@ -26,7 +26,7 @@
 #ifndef CONSOLEBACKEND_H
 #define CONSOLEBACKEND_H
 
-#include "trace/ILogBackEnd.h"
+#include "trace/backend/ILogBackEnd.h"
 
 namespace trace
 {
@@ -37,7 +37,7 @@ namespace trace
      * Uses the cout and cerr streams depending on the LogEntry level.
      *  
      */
-    class ConsoleBackEnd : public ILogBackEnd
+    class ConsoleBackEnd : public backend::ILogBackEnd
     {
     public:
         ConsoleBackEnd();

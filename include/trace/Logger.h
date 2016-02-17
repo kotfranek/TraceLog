@@ -37,8 +37,11 @@
 #include "trace/LogPersistThread.h"
 
 namespace trace
-{       
-    class ILogBackEnd;
+{     
+    namespace backend
+    {
+        class ILogBackEnd;
+    }
         
     class Logger : public ILogger
     {        
@@ -81,7 +84,7 @@ namespace trace
          * Set the backend implementation 
          * @arg backEnd Valid implementation
          */
-        virtual void setBackEnd( ILogBackEnd* backEnd );
+        virtual void setBackEnd( backend::ILogBackEnd* backEnd );
         
         
         /**
@@ -103,7 +106,7 @@ namespace trace
         LogPersistThread m_persistThread;
                
         /* Log backend */
-        ILogBackEnd* m_backEnd;
+        backend::ILogBackEnd* m_backEnd;
     };
 
 };

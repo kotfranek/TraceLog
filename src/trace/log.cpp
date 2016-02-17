@@ -52,7 +52,7 @@ namespace trace
     }
     
     
-    ILogBackEnd& logBackend( const LogBackend backEnd )
+    backend::ILogBackEnd& logBackend( const LogBackend backEnd )
     {
         switch( backEnd )
         {

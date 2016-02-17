@@ -34,55 +34,58 @@ namespace trace
     {
         class LogEntry;
     }    
-    /**
-    * Log BackEnd Interface 
-    * 
-    * Implement this to process and store the single LogEntry.
-    * It is guaranteed for the class to be called synchronously.
-    * 
-    * Unless the internal implementation requires it, there is no need for 
-    * access synchronisation.
-    */
-    class ILogBackEnd
+    
+    namespace backend
     {
-    public:
         /**
-        * Add entry. Thread safe
-        * @arg entry
-        * @result true, on successful entry inhibit
+        * Log BackEnd Interface 
+        * 
+        * Implement this to process and store the single LogEntry.
+        * It is guaranteed for the class to be called synchronously.
+        * 
+        * Unless the internal implementation requires it, there is no need for 
+        * access synchronisation.
         */
-        virtual bool add( const entry::LogEntry& entry ) = 0;
-        
-        
-        /**
-         * Called on BackEnd register 
-         */
-        virtual void onRegister() = 0;
-        
-        
-        /**
-         * Called on Logger shutdown/destruction
-         */
-        virtual void onShutdown() = 0;
-        
-        
-        /**
-         * Get the BackEnd's name
-         * @result Name-String reference
-         */
-        virtual const ::esys::TString31& getName() const = 0;
-        
-    protected:
-            
-        ILogBackEnd()
+        class ILogBackEnd
         {
-        };
-        
-        virtual ~ILogBackEnd()
-        {
-        };        
-    };
+        public:
+            /**
+            * Add entry. Thread safe
+            * @arg entry
+            * @result true, on successful entry inhibit
+            */
+            virtual bool add( const entry::LogEntry& entry ) = 0;
 
+
+            /**
+             * Called on BackEnd register 
+             */
+            virtual void onRegister() = 0;
+
+
+            /**
+             * Called on Logger shutdown/destruction
+             */
+            virtual void onShutdown() = 0;
+
+
+            /**
+             * Get the BackEnd's name
+             * @result Name-String reference
+             */
+            virtual const ::esys::TString31& getName() const = 0;
+
+        protected:
+
+            ILogBackEnd()
+            {
+            };
+
+            virtual ~ILogBackEnd()
+            {
+            };        
+        };
+    }; // namespace backend
 };
 
 #endif // ILOGBACKEND_H

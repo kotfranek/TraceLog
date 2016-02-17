@@ -49,7 +49,7 @@ namespace trace
      * @result LogBackEnd instance reference
      * @remark Return default in case of wrong argument
      */
-    ILogBackEnd& logBackend( const LogBackend backEnd );
+    backend::ILogBackEnd& logBackend( const LogBackend backEnd );
 };
 
 /* Globally available Logger instance */

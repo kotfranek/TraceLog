@@ -26,14 +26,14 @@
 #ifndef UDPBACKEND_H
 #define UDPBACKEND_H
 
-#include "ILogBackEnd.h"
+#include "trace/backend/ILogBackEnd.h"
 #include "trace/UdpClientMediator.h"
 #include "net/UdpSocket.h"
 
 namespace trace
 {
 
-    class UdpBackEnd : public ILogBackEnd
+    class UdpBackEnd : public backend::ILogBackEnd
     {
     public:
         UdpBackEnd();

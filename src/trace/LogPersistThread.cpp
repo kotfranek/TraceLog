@@ -24,7 +24,7 @@
  */
 
 #include "trace/LogPersistThread.h"
-#include "trace/ILogBackEnd.h"
+#include "trace/backend/ILogBackEnd.h"
 #include "trace/TraceSharedContainer.h"
 
 #include <cstdlib>
@@ -60,7 +60,7 @@ LogPersistThread::LogPersistThread ( TraceSharedContainer& traceContainer )
 }
 
 
-void LogPersistThread::setBackEnd( ILogBackEnd* backEnd )
+void LogPersistThread::setBackEnd( backend::ILogBackEnd* backEnd )
 {
     m_backEnd = backEnd;
 }

@@ -24,7 +24,7 @@
  */
 
 #include "trace/Logger.h"
-#include "trace/ILogBackEnd.h"
+#include "trace/backend/ILogBackEnd.h"
 #include "sys/ESysDefs.h"
 
 #include <cstdarg>
@@ -46,7 +46,7 @@ Logger::Logger()
 }
 
 
-void Logger::setBackEnd( ILogBackEnd* backEnd )
+void Logger::setBackEnd( backend::ILogBackEnd* backEnd )
 {
     ::sys::TLockMutex l( m_mutex );
     
