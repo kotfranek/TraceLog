@@ -74,9 +74,6 @@ namespace trace
         /* LogBackend implementation */
         backend::ILogBackEnd* m_backEnd;    
 
-        /* Log Cache index */
-        size_t m_index;    
-
         /* Log Entries */
         entry::LogEntry m_entries[ LOG_PERSIST_THREAD_CACHE ];    
     };

@@ -38,7 +38,7 @@ namespace
     const uint32_t NEW_ENTRY_TIMEOUT_MS = 100U;
     
     /* Let the thread sleep a bit while reading */
-    const uint32_t READ_LOOP_SLEEP_US = 25U;
+    const uint32_t GET_ENTRIES_LOOP_SLEEP_US = 25U;
 };
 
 namespace trace
@@ -48,7 +48,6 @@ LogPersistThread::LogPersistThread ( TraceSharedContainer& traceContainer )
     : ::sys::AbstractThread( "LogPersistence" )
     , m_traceContainer( traceContainer )
     , m_backEnd( NULL )
-    , m_index( 0u )
     , m_entries()
 {
 
@@ -86,8 +85,8 @@ void LogPersistThread::run()
                     m_backEnd->add( m_entries[ i ] );
                 }
                 
-                /* Let the buffer get some payload */
-                sleepUs( ::READ_LOOP_SLEEP_US );
+                /* Let the feeding thread in */
+                sleepUs( ::GET_ENTRIES_LOOP_SLEEP_US );
             }
             while( count != 0U );
         }

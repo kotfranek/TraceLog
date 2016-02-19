@@ -24,6 +24,7 @@
  */
 
 #include "trace/UdpClientMediator.h"
+#include "trace/backend/udp/UdpBackEndControl.h"
 #include "sys/ESysDefs.h"
 #include "sys/StopWatch.h"
 #include "net/UdpSocket.h"
@@ -32,33 +33,9 @@
 #include <iostream>
 
 namespace
-{
-    /* UDP Client identification */
-    const ::std::string UDP_CLIENT_HANDSHAKE( "TRACELOG_UDP_CLIENT_HS" );  
-    
-    /* UDP Client Disconnect */
-    const ::std::string UDP_CLIENT_CLOSE( "TRACELOG_UDP_CLIENT_CLOSE" );
-    
-    /* UDP Client Disconnect */
-    const ::std::string UDP_CLIENT_ID( "TRACELOG_UDP_CLIENT_ID" );    
-    
+{    
     /* Server identifier */
-    const ::std::string UDP_SERVER_NAME( "UDP-TraceLog-Client-0.1.2" );
-    
-    /* UDP Server identification */
-    const ::std::string UDP_SERVER_HANDSHAKE( "TRACELOG_UDP_SRV_HS" );    
-    
-    /* UDP Server Heartbeat signal */
-    const ::std::string UDP_SERVER_HEARTBEAT( "TRACELOG_UDP_SRV_HB" );
-    
-    /* UDP Client Disconnect */
-    const ::std::string UDP_SERVER_CLOSE( "TRACELOG_UDP_SRV_CLOSE" );         
-    
-    /* UDP Client Present */
-    const ::std::string UDP_CLIENT_PRESENT( "TRACELOG-CLIENT-PRESENT" );         
-    
-    /* Maximum time for the Server's presence signal */
-    const uint64_t UDP_SERVER_HEARTBEAT_PERIOD = 500U * 1000U;
+    const ::std::string UDP_SERVER_NAME( "UDP-TraceLog-Server-0.2.0" );
 }
 
 namespace trace
@@ -114,15 +91,14 @@ void UdpClientMediator::run()
             {
                 sleepTime = 50U;
                 
-                if ( waitForClient( fromClient, ::UDP_CLIENT_HANDSHAKE ) )
+                if ( waitForClient( fromClient, backend::udp::UDP_CLIENT_HANDSHAKE ) )
                 {
                     const ::net::Address& addr = fromClient.getAddress();                    
                     
                     if ( m_socket.connect( addr ) )
                     {                       
-                        if ( sendStringToClient( ::UDP_SERVER_HANDSHAKE + ::UDP_SERVER_NAME ) )
-                        {
-                            ::std::cout << "HANDSHAKE..." << ::std::endl;   
+                        if ( sendStringToClient( backend::udp::UDP_SERVER_HANDSHAKE + ::UDP_SERVER_NAME ) )
+                        { 
                             setState( Mediator_WaitForClientId );
                         }
                     }                                        
@@ -136,11 +112,11 @@ void UdpClientMediator::run()
                 
                 if ( receiveStringFromClient( fromClient, clientId ) )
                 {
-                    if ( 0 == clientId.find( UDP_CLIENT_ID ) )
+                    if ( 0 == clientId.find( backend::udp::UDP_CLIENT_ID ) )
                     { 
                         m_clientId = clientId;
                                                 
-                        if ( sendStringToClient( ::UDP_SERVER_HEARTBEAT ) )
+                        if ( sendStringToClient( backend::udp::UDP_SERVER_HEARTBEAT ) )
                         {
                             sleepTime = 200U;
                             heartBeatTimer.start();
@@ -157,9 +133,9 @@ void UdpClientMediator::run()
             
             case Mediator_Connected:
             {
-                if ( heartBeatTimer.elapsed( ::UDP_SERVER_HEARTBEAT_PERIOD ) )
+                if ( heartBeatTimer.elapsed( backend::udp::UDP_SERVER_HEARTBEAT_PERIOD ) )
                 {                    
-                    if ( sendStringToClient( ::UDP_SERVER_HEARTBEAT ) )
+                    if ( sendStringToClient( backend::udp::UDP_SERVER_HEARTBEAT ) )
                     {
                         heartBeatTimer.reStart();
                     }
@@ -181,7 +157,7 @@ void UdpClientMediator::run()
     ::sys::TLockMutex l( m_udpMutex );
     if ( isState( Mediator_Connected ) )
     {
-        sendStringToClient( ::UDP_SERVER_CLOSE );
+        sendStringToClient( backend::udp::UDP_SERVER_CLOSE );
     }
 }
 
