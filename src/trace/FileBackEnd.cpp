@@ -26,6 +26,7 @@
 #include "trace/FileBackEnd.h"
 #include "trace/ConsoleBackEnd.h"
 #include "trace/entry/LogEntry.h"
+#include "trace/entry/PayloadHelper.h"
 #include "sys/StopWatch.h"
 #include "esys/AutoString.h"
 
@@ -36,10 +37,10 @@ namespace
     const char* LOG_FILE_OPEN_MODE = "wb";
         
     /* Maximal Single log Entry binary representation length */
-    const size_t MAX_LOG_ENTRY_STREAM_SIZE = sizeof( ::trace::entry::Payload );
+    const size_t MAX_ENTRY_SIZE = sizeof( ::trace::entry::Payload );
     
     /* Static buffer, accessed always with mutex, so this is safe */
-    uint8_t ENTRY_BUFFER[ MAX_LOG_ENTRY_STREAM_SIZE ] = {};
+    //uint8_t ENTRY_BUFFER[ MAX_LOG_ENTRY_STREAM_SIZE ] = {};
     
     /* Standard File Header */
     const uint8_t LOG_FILE_HEADER[] = { 'l', 'o', 'g', '1' };
@@ -68,8 +69,8 @@ namespace trace
 FileBackEnd::FileBackEnd()
     : ILogBackEnd()
     , m_errorToConsole( true )
-    , m_index( 0U )
-    , m_entries()
+    , m_cachePtr( 0U )
+    , m_cache()
     , m_file( NULL )
 {
 
@@ -79,13 +80,16 @@ FileBackEnd::FileBackEnd()
 void FileBackEnd::onRegister( const ::sys::TPid pid )
 {    
     ::esys::TString63 fileName;    
-    fileName.c_format( "tracelog_%d.log", pid );
+    fileName.c_format( "tracelog_%d.log", pid );    
     
     m_file = ::std::fopen( fileName.c_str() , ::LOG_FILE_OPEN_MODE );
     
     if ( ::isOpened( m_file ) )
     {
-        ::std::fwrite( LOG_FILE_HEADER, sizeof( LOG_FILE_HEADER ), 1U,  m_file );        
+        //::std::setvbuf ( m_file, (char*) m_entries, _IOFBF, LOG_FILE_BACKEND_CACHE_SIZE_BYTES );
+        //::std::setvbuf ( m_file, NULL, _IONBF, 0 );
+        ::std::fwrite( LOG_FILE_HEADER, sizeof( LOG_FILE_HEADER ), 1U,  m_file );
+        ::std::fflush( m_file );
     }
 }
 
@@ -101,15 +105,21 @@ void FileBackEnd::onShutdown()
 
 
 bool FileBackEnd::add( const entry::LogEntry& entry )
-{
-    if ( LOG_FILE_BACKEND_CACHE_SIZE <= m_index )
+{     
+    if ( m_cachePtr >= LOG_FILE_BACKEND_CACHE_SIZE_BYTES - MAX_ENTRY_SIZE )
     {
         persistEntries();
-        m_index = 0U;
     }
     
-    m_entries[ m_index ] = entry;
-    ++m_index; 
+    size_t msgLength = 0U;
+    entry::PayloadHelper helper( entry.exposeData() );
+
+    msgLength = helper.serializeHeader( m_cache + m_cachePtr );
+    m_cachePtr += entry::PayloadHelper::getHeaderLength();
+
+    ::memcpy( m_cache + m_cachePtr, helper.message(), msgLength );
+    m_cachePtr +=msgLength;
+    
     
     printToConsoleIfRequired( entry );
     
@@ -125,17 +135,11 @@ const ::esys::TString31& FileBackEnd::getName() const
 
 void FileBackEnd::persistEntries()
 {
-    ::sys::StopWatch stWatch( true );
-
-    if ( ::isOpened( m_file ) && 0U != m_index )
+    if ( ::isOpened( m_file ) && 0U != m_cachePtr )
     {
-        size_t bytesToWrite = 0U;
-        
-        for ( size_t i = 0U ; i < m_index; i++ )
-        {            
-             bytesToWrite = m_entries[ i ].exposeData().serialize( ENTRY_BUFFER );
-             ::std::fwrite( ENTRY_BUFFER, bytesToWrite, 1U, m_file );
-        }
+        ::std::fwrite( m_cache, m_cachePtr, 1U, m_file );
+        //::std::fflush( m_file );
+        m_cachePtr = 0U;
     }
 }
 

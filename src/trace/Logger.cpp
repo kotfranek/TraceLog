@@ -59,7 +59,7 @@ void Logger::setBackEnd( backend::ILogBackEnd* backEnd )
     }
     else
     {
-        log( LogLevel_Warning, "Trying to change backend while Log running" );
+        log( LogLevel_Warning, "Backend change while running is not possible" );
     }
 }
 
@@ -105,6 +105,7 @@ void Logger::shutDown()
     if ( NULL != m_backEnd )
     {
         logV( LogLevel_Internal, "Dropped %u messages", m_droppedCount );
+        
         m_persistThread.requestStop();
         m_persistThread.join();
         

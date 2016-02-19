@@ -84,9 +84,8 @@ LogEntry::LogEntry( const LogLevel level, const char* message )
 LogEntry::LogEntry( const uint64_t& timestamp, const LogLevel level, const char* message )
     : m_data()
 {
-    m_data.m_timestamp = timestamp;
-    m_data.m_level = level;
-    ::std::strncpy( m_data.m_message, message, LOG_MESSAGE_SIZE_MAX );
+    set( level, message );
+    m_data.m_timestamp = timestamp;    
 }
 
 
@@ -94,7 +93,8 @@ void LogEntry::set( const LogLevel level, const char* message )
 {
     m_data.m_timestamp = getTimestamp();
     m_data.m_level = level;    
-    ::std::strncpy( m_data.m_message, message, LOG_MESSAGE_SIZE_MAX );   
+    ::std::strncpy( m_data.m_message, message, LOG_MESSAGE_SIZE_MAX );  
+    m_data.m_length = ::strlen( m_data.m_message );
 }
 
 
@@ -102,7 +102,17 @@ void LogEntry::set( const LogLevel level, const char* format, va_list args )
 {
     m_data.m_timestamp = getTimestamp();
     m_data.m_level = level;  
-    ::std::vsnprintf( m_data.m_message, LOG_MESSAGE_SIZE_MAX, format, args );
+    const int32_t length = ::std::vsnprintf( m_data.m_message, LOG_MESSAGE_SIZE_MAX, format, args );
+    
+    if ( length >= 0 )
+    {
+        m_data.m_length = length % ( LOG_MESSAGE_SIZE_MAX - 1U );
+        m_data.m_message[ LOG_MESSAGE_SIZE_MAX - 1U ] = '\0';
+    }
+    else
+    {
+        m_data.m_length = 0U;
+    }
 }
 
 

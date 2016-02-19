@@ -68,6 +68,17 @@ Payload::Payload()
 }
 
 
+Payload& Payload::operator =( const Payload& other )
+{
+    m_timestamp = other.m_timestamp;
+    m_level = other.m_level;
+    m_length = other.m_length;
+    ::memcpy( m_message, other.m_message, other.m_length );
+    m_message[ m_length ] = '\0';
+    return *this;
+}
+
+
 size_t Payload::serialize( uint8_t* output ) const
 {
     size_t offset = 0U;

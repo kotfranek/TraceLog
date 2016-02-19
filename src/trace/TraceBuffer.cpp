@@ -65,6 +65,21 @@ bool TraceBuffer::add( const entry::LogEntry& entry )
 }
 
 
+const entry::LogEntry& TraceBuffer::current() const
+{
+    return m_entries[ m_readPtr ];
+}
+
+
+void TraceBuffer::disposeElement()
+{
+    if ( m_readPtr != m_writePtr )
+    {
+        m_readPtr = ::safeIncrement( m_readPtr );
+    }      
+}
+
+
 bool TraceBuffer::read( entry::LogEntry& entry )
 {
     bool readPossible = m_readPtr != m_writePtr;
@@ -72,7 +87,7 @@ bool TraceBuffer::read( entry::LogEntry& entry )
     if ( readPossible )
     {
         entry = m_entries[ m_readPtr ];
-        m_readPtr = ::safeIncrement( m_readPtr );;
+        m_readPtr = ::safeIncrement( m_readPtr );
     }    
     
     return readPossible;

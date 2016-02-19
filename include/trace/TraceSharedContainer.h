@@ -26,12 +26,12 @@
 #ifndef TRACESHAREDCONTAINER_H
 #define TRACESHAREDCONTAINER_H
 
+#include <mutex>
+#include <condition_variable>
+
 #include "LogDefines.h"
 #include "trace/entry/LogEntry.h"
 #include "TraceBuffer.h"
-
-#include <mutex>
-#include <condition_variable>
 
 namespace trace
 {
@@ -53,13 +53,21 @@ public:
     
     
     /**
-     * Read all available entries if condition was set within the given timeout
-     * Thread safe.
-     * @arg timeout Max waiting time
-     * @arg [out] entry
-     * @result number of entries
+     * Consumer-Thread wait method.
+     * Wait until data is available up to given time elapses
+     * @param timeout in ms
+     * @return true, if dta can be read
      */
-    size_t waitUntilAvailableAndRead( const uint32_t timeout, entry::LogEntry* entryBuffer );
+    bool waitForEntries( const uint32_t timeout );
+    
+    
+    /**
+     * Retrieve maxNumber of entries from the Buffer
+     * @param destination output buffer, must be enough for maxNumber
+     * @param maxNumber maximum amount of items
+     * @return actual copied entries count
+     */
+    size_t getEntries( entry::LogEntry* destination, const size_t maxNumber );       
     
     /**
      * Read all available entries.
@@ -74,11 +82,11 @@ private:
     TraceSharedContainer& operator=(const TraceSharedContainer& other);
     
     /**
-     * Get all buffer
+     * Get a number of entries
      * @param entryBuffer
-     * @return number of elements read
+     * @return number of elements actually read
      */
-    size_t readAll( entry::LogEntry* entryBuffer );
+    size_t readEntries( entry::LogEntry* entryBuffer, const size_t bufferSize );
     
     /* Thread safety access mutex */
     ::std::mutex m_mutex;

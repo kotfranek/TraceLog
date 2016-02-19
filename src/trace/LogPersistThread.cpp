@@ -24,6 +24,7 @@
  */
 #include <cstdlib>
 #include <iostream>
+#include <unistd.h>
 
 #include "sys/SystemInfo.h"
 
@@ -34,17 +35,10 @@
 namespace
 {
     /* Max time in ms to wait for the LogEntry */
-    const uint32_t NEW_ENTRY_TIMEOUT_MS = 250U;
+    const uint32_t NEW_ENTRY_TIMEOUT_MS = 100U;
     
-    
-    inline ::esys::TString63 backendRegisteredText( const ::esys::TString31& backendName )
-    {
-        ::esys::TString63 descr( "BackEnd '" );
-        descr.append( backendName );
-        descr.append( "' registered" );   
-        
-        return descr;
-    }
+    /* Let the thread sleep a bit while reading */
+    const uint32_t READ_LOOP_SLEEP_US = 25U;
 };
 
 namespace trace
@@ -69,20 +63,34 @@ void LogPersistThread::setBackEnd( backend::ILogBackEnd* backEnd )
 
 void LogPersistThread::run()
 {   
+    ::esys::TString63 backendRegistered;
+    backendRegistered.c_format( "Backedn '%s' registered", m_backEnd->getName().c_str() );
+    
     m_backEnd->onRegister( ::sys::SystemInfo::getOwnProcessId() );
-    m_backEnd->add( entry::LogEntry( LogLevel_Internal, ::backendRegisteredText( m_backEnd->getName() ).c_str() ) );   
+    m_backEnd->add( entry::LogEntry( LogLevel_Internal, backendRegistered.c_str() ) );   
     
     bool assertion = false;
+    size_t count = 0U;
     
-    while ( !isStopRequested() )
+    do
     {
-        const size_t count = m_traceContainer.waitUntilAvailableAndRead( ::NEW_ENTRY_TIMEOUT_MS, m_entries );
-               
-        for ( size_t i = 0U; i < count; i++ )
+        if ( m_traceContainer.waitForEntries( ::NEW_ENTRY_TIMEOUT_MS ) )
         {
-            assertion = m_entries[ i ].isLevel( LogLevel_Assert );
-            m_backEnd->add( m_entries[ i ] );
-        } 
+            do
+            {
+                count = m_traceContainer.getEntries( m_entries, LOG_PERSIST_THREAD_CACHE );
+
+                for ( size_t i = 0U; i < count; i++ )
+                {
+                    assertion = m_entries[ i ].isLevel( LogLevel_Assert );
+                    m_backEnd->add( m_entries[ i ] );
+                }
+                
+                /* Let the buffer get some payload */
+                sleepUs( ::READ_LOOP_SLEEP_US );
+            }
+            while( count != 0U );
+        }
         
         /* Exit the thread loop in case of ASSERT level entry */
         if ( assertion )
@@ -90,15 +98,8 @@ void LogPersistThread::run()
             break;
         }
     }
-    
-    const size_t count = m_traceContainer.readAllRemaining( m_entries );
-
-    for ( size_t i = 0U; i < count; i++ )
-    {
-        assertion = m_entries[ i ].isLevel( LogLevel_Assert );
-        m_backEnd->add( m_entries[ i ] );
-    }
-    
+    while ( !isStopRequested() );    
+       
     /* Add the closing entry and shutdown the LogBackEnd */
     m_backEnd->add( entry::LogEntry( LogLevel_Internal, "Shutdown the BackEnd" ) );    
     m_backEnd->onShutdown();

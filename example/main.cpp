@@ -4,6 +4,8 @@
 #include "trace/log.h"
 #include "trace/UdpBackEnd.h"
 
+//#define PERFORMANCE_TEST 1
+
 namespace
 {
     class Th1 : public ::sys::AbstractThread
@@ -51,6 +53,7 @@ public:
 private:    
     virtual int32_t onRun( const TStringVector& args )
     {       
+#ifndef PERFORMANCE_TEST
         const size_t NUM_TH = 26U;
                 
         Th1* threads[ NUM_TH ];
@@ -77,19 +80,18 @@ private:
             
             delete threads[ i ];
         }
-        
-        /* Uncomment this part to enable the benchmark
+#else        
+        /* Run the benchmark */
         LOG_INFO_C( "Start The Benchmark" );
         ::sys::StopWatch sw( true );
 
         for ( uint32_t i = 0; i < 100000; i++ )
         {
-            LOG_INFO_C("TEST: %u and some text here :-)", i);       
+            LOG_INFO_C("TEST: and some text here :-)");                   
         }
         
-        LOG_INFO_C( "Took: %u ms", sw.stop() / 1000U );
-        */
-        
+        LOG_INFO_C( "Took: %u ms", sw.stop() / 1000U );        
+#endif // PERFORMANCE_TEST        
         return 0;
     }
 };
@@ -97,7 +99,7 @@ private:
 
 int32_t main( int argc, const char * const * argv )
 {
-    LOGGER_INIT_BE_FILE;
+    LOGGER_INIT_BE_UDP;
     
     LOG_INFO_C( "App Started: %c", 'a' );
     int32_t result = ::DemoApp().run( argc, argv );

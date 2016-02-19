@@ -83,11 +83,11 @@ private:
     /* Whether to print the error messages to console */
     bool m_errorToConsole;
                 
-    /* Log Cache index */
-    size_t m_index;    
+    /* Cache pointer */
+    size_t m_cachePtr;    
     
-    /* Log Entries */
-    entry::LogEntry m_entries[ LOG_FILE_BACKEND_CACHE_SIZE ];
+    /* Log Cache (serialized Entries) */
+    uint8_t m_cache[ LOG_FILE_BACKEND_CACHE_SIZE_BYTES ];
     
     /* Output file handle */
     ::std::FILE* m_file;

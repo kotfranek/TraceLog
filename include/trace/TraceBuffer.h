@@ -55,7 +55,19 @@ public:
      * @arg [out] entry
      * @result true, if element was available
      */
-    bool read( entry::LogEntry& entry );     
+    bool read( entry::LogEntry& entry );  
+    
+    
+    /**
+     * Expose the current read entry
+     * @return 
+     */
+    const entry::LogEntry& current() const;
+    
+    /**
+     * Remove one element (increments the read pointer)
+     */
+    void disposeElement();
     
     /**
      * Get number of stored elements

@@ -52,8 +52,19 @@ namespace trace
             /* Trace level */
             LogLevel m_level;
             
+            /* Message text length */
+            uint16_t m_length;
+            
             /* Message content */
             char m_message[ LOG_MESSAGE_SIZE_MAX ]; 
+            
+            /**
+             * Copy operator
+             * @param other
+             * @return *this
+             */
+            Payload& operator=( const Payload& other );
+                               
             
             /**
              * Serialize the payload 

@@ -28,6 +28,12 @@
 
 #include <iostream>
 
+namespace
+{
+    /* Condition Variable "No timeout" value */
+    const auto COND_NO_TIMEOUT = ::std::cv_status::no_timeout; 
+}
+
 
 namespace trace
 {
@@ -43,42 +49,47 @@ TraceSharedContainer::TraceSharedContainer()
 
 bool TraceSharedContainer::add( const entry::LogEntry& entry )
 {
-    ::sys::TLockMutex l( m_mutex );
-
-    const bool result = m_buffer.add( entry );
-    
-    m_condDataAvail.notify_all();
-    
-    return result;
-}
-
-
-size_t TraceSharedContainer::waitUntilAvailableAndRead( const uint32_t timeout, entry::LogEntry* entryBuffer )
-{
-    ::sys::TLockUnique l( m_mutex );
-    
-    size_t result = 0U;
-    
-    if ( std::cv_status::no_timeout == m_condDataAvail.wait_for( l, ::std::chrono::milliseconds( timeout ) ) )
+    bool result = false;
     {
-        result = readAll( entryBuffer );
+        ::sys::TLockMutex l( m_mutex );
+        result = m_buffer.add( entry );
+    }
+    if ( result )
+    {
+        m_condDataAvail.notify_one();
     }
     
     return result;
 }
 
 
-size_t TraceSharedContainer::readAllRemaining( entry::LogEntry* entryBuffer )
+bool TraceSharedContainer::waitForEntries( const uint32_t timeout )
 {
     ::sys::TLockUnique l( m_mutex );
     
-    return readAll( entryBuffer );
+    return ::COND_NO_TIMEOUT == m_condDataAvail.wait_for( l, ::std::chrono::milliseconds( timeout ) );
 }
 
 
-size_t TraceSharedContainer::readAll( entry::LogEntry* entryBuffer )
+size_t TraceSharedContainer::getEntries( entry::LogEntry* destination, const size_t maxNumber )
 {
-    const size_t result = m_buffer.size();
+    ::sys::TLockMutex l( m_mutex );
+    
+    return readEntries( destination, maxNumber );
+}
+
+
+size_t TraceSharedContainer::readAllRemaining( entry::LogEntry* entryBuffer )
+{
+    ::sys::TLockMutex l( m_mutex );
+    
+    return readEntries( entryBuffer, m_buffer.size() );
+}
+
+
+size_t TraceSharedContainer::readEntries( entry::LogEntry* entryBuffer, const size_t bufferSize )
+{
+    const size_t result = ::std::min( bufferSize, m_buffer.size() );
 
     for( size_t i = 0U; i < result; i++ )
     {
