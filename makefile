@@ -19,7 +19,7 @@ EXAMPLE_OUTDIR = bin
 INCPARAMS=$(foreach d, $(INCLUDES),-I$d)
 LIBDIRPARAMS=$(foreach d, $(LIBDIRS),-L$d)
 
-OPTFLAGS = -s -Os
+#OPTFLAGS = -s -Os
 CFLAGS = -g -Wall -std=c++11 $(INCPARAMS) $(OPTFLAGS)
 LFLAGS = -Wall $(LIBDIRPARAMS)
 RUNARGS = 

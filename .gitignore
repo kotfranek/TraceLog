@@ -39,3 +39,4 @@ nbproject/*
 
 # Executables
 bin/*
+/build/

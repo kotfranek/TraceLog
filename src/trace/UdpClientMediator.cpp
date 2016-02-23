@@ -114,7 +114,7 @@ void UdpClientMediator::run()
                 {
                     if ( 0 == clientId.find( backend::udp::UDP_CLIENT_ID ) )
                     { 
-                        m_clientId = clientId;
+                        m_clientId = clientId.substr( ::trace::backend::udp::UDP_CLIENT_ID.length() );
                                                 
                         if ( sendStringToClient( backend::udp::UDP_SERVER_HEARTBEAT ) )
                         {
