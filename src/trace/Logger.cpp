@@ -25,7 +25,7 @@
 
 #include "trace/Logger.h"
 #include "trace/backend/ILogBackEnd.h"
-#include "sys/ESysDefs.h"
+#include "sys/SysTypes.h"
 
 #include <cstdarg>
 #include <cstdio>

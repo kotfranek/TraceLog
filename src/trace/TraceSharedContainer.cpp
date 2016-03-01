@@ -24,7 +24,7 @@
  */
 
 #include "trace/TraceSharedContainer.h"
-#include "sys/ESysDefs.h"
+#include "sys/SysTypes.h"
 
 #include <iostream>
 

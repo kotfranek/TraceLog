@@ -27,7 +27,7 @@
 #define ILOGBACKEND_H
 
 #include "esys/AutoString.h"
-#include "sys/ESysDefs.h"
+#include "sys/SysTypes.h"
 
 namespace trace
 {       

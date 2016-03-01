@@ -25,7 +25,7 @@
 
 #include "trace/UdpClientMediator.h"
 #include "trace/backend/udp/UdpBackEndControl.h"
-#include "sys/ESysDefs.h"
+#include "sys/SysTypes.h"
 #include "sys/StopWatch.h"
 #include "net/UdpSocket.h"
 #include "net/Datagram.h"
