@@ -31,6 +31,7 @@
 #include "net/Datagram.h"
 
 #include <iostream>
+#include <cstring>
 
 namespace
 {    
@@ -114,7 +115,7 @@ void UdpClientMediator::run()
                 {
                     if ( 0 == clientId.find( backend::udp::UDP_CLIENT_ID ) )
                     { 
-                        m_clientId = clientId.substr( ::trace::backend::udp::UDP_CLIENT_ID.length() );
+                        m_clientId = clientId.substr( ::std::strlen( ::trace::backend::udp::UDP_CLIENT_ID ) );
                                                 
                         if ( sendStringToClient( backend::udp::UDP_SERVER_HEARTBEAT ) )
                         {

@@ -25,6 +25,7 @@
 
 #include "trace/UdpBackEnd.h"
 #include "trace/entry/LogEntry.h"
+#include "net/NetTypes.h"
 #include "net/Datagram.h"
 
 #include <errno.h>
@@ -48,7 +49,7 @@ namespace
     const uint32_t UDP_SEND_TIMEOUT_MS = 5U;    
     
     /* Server Receive Port */
-    const uint16_t UDP_LISTEN_PORT = 55555U;
+    const ::net::TPort UDP_LISTEN_PORT = 55555U;
 }
 
 namespace trace

@@ -15,7 +15,6 @@
 #define UDPBACKENDNETINTERFACE_H
 
 #include <stdint.h>
-#include <string>
 
 namespace trace
 {
@@ -30,25 +29,28 @@ namespace trace
             const int64_t UDP_SERVER_HEARTBEAT_TIMEOUT = 1000U * 1000U; 
                                 
             /* UDP Client identification */
-            const ::std::string UDP_CLIENT_HANDSHAKE( "TRACELOG_UDP_CLIENT_HS" );  
+            const char* UDP_CLIENT_HANDSHAKE = "TRACELOG_UDP_CLIENT_HS";  
 
             /* UDP Client Disconnect */
-            const ::std::string UDP_CLIENT_CLOSE( "TRACELOG_UDP_CLIENT_CLOSE" );
+            const char* UDP_CLIENT_CLOSE = "TRACELOG_UDP_CLIENT_CLOSE";
 
             /* UDP Client Disconnect */
-            const ::std::string UDP_CLIENT_ID( "TRACELOG_UDP_CLIENT_ID" );      
+            const char* UDP_CLIENT_ID = "TRACELOG_UDP_CLIENT_ID";      
             
             /* UDP Client Present (CURRENTLY NOT USED) */
-            const ::std::string UDP_CLIENT_PRESENT( "TRACELOG-CLIENT-PRESENT" );                         
+            const char* UDP_CLIENT_PRESENT = "TRACELOG-CLIENT-PRESENT";
+            
+            /* UDP Server Log Entry prefix */
+            const char* UDP_SERVER_LOG_ENTRY = "TL-LE";
 
             /* UDP Server identification */
-            const ::std::string UDP_SERVER_HANDSHAKE( "TRACELOG_UDP_SRV_HS" );    
+            const char* UDP_SERVER_HANDSHAKE = "TRACELOG_UDP_SRV_HS";    
 
             /* UDP Server Heartbeat signal */
-            const ::std::string UDP_SERVER_HEARTBEAT( "TRACELOG_UDP_SRV_HB" );
+            const char* UDP_SERVER_HEARTBEAT = "TRACELOG_UDP_SRV_HB";
 
             /* UDP Client Disconnect */
-            const ::std::string UDP_SERVER_CLOSE( "TRACELOG_UDP_SRV_CLOSE" );                
+            const char* UDP_SERVER_CLOSE = "TRACELOG_UDP_SRV_CLOSE";                
         }
     }
 };
