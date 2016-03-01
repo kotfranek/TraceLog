@@ -28,16 +28,21 @@
 
 #include <mutex>
 #include "sys/AbstractThread.h"
+#include "entry/LogEntry.h"
+#include "net/Datagram.h"
 
 namespace net
 {
     class UdpSocket;
-    class Datagram;
 }
 
 namespace trace
 {
-
+    namespace entry
+    {
+        class LogEntry;
+    };
+    
     class UdpClientMediator : public ::sys::AbstractThread
     {
     public:
@@ -55,7 +60,7 @@ namespace trace
          * Send if possible 
          * @arg datagram
          */
-        bool send( const ::net::Datagram& datagram );
+        bool send( const ::trace::entry::LogEntry& entry );
         
     private:
         /* Prohibit copying */
@@ -114,6 +119,9 @@ namespace trace
                 
         /* Socket instance */
         ::net::UdpSocket& m_socket;
+        
+        /* Auxiliary Sending Datagram */
+        ::net::Datagram m_sendPayload;
         
         /* Internal state */
         MediatorState m_state;

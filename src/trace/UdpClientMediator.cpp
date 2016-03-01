@@ -25,6 +25,7 @@
 
 #include "trace/UdpClientMediator.h"
 #include "trace/backend/udp/UdpBackEndControl.h"
+#include "trace/entry/LogEntry.h"
 #include "sys/SysTypes.h"
 #include "sys/StopWatch.h"
 #include "net/UdpSocket.h"
@@ -45,6 +46,7 @@ namespace trace
 UdpClientMediator::UdpClientMediator( ::net::UdpSocket& socket )
     : ::sys::AbstractThread( "UdpClientMediator" )
     , m_socket( socket )
+    , m_sendPayload()
     , m_state( Mediator_Disconnected )
     , m_clientId()
     , m_udpMutex()
@@ -165,10 +167,9 @@ void UdpClientMediator::run()
 
 bool UdpClientMediator::sendStringToClient( const ::std::string& content )
 {
-    ::net::Datagram s;
-    s.setContent( content );                    
+    m_sendPayload.setContent( content );                    
     
-    return m_socket.send( s ); 
+    return m_socket.send( m_sendPayload ); 
 }
 
 
@@ -201,7 +202,7 @@ bool UdpClientMediator::waitForClient( ::net::Datagram& auxiliary, const ::std::
 
 
 
-bool UdpClientMediator::send( const net::Datagram& datagram )
+bool UdpClientMediator::send( const ::trace::entry::LogEntry& entry )
 {
     bool result = false;
  
@@ -209,7 +210,9 @@ bool UdpClientMediator::send( const net::Datagram& datagram )
     
     if ( isState( Mediator_Connected ) )
     {
-        if ( m_socket.send( datagram ) )
+        m_sendPayload.setContent( entry.toString() );
+        
+        if ( m_socket.send( m_sendPayload ) )
         {
             result = true;
         }

@@ -63,11 +63,6 @@ namespace trace
         UdpBackEnd& operator=(const UdpBackEnd& other); 
         UdpBackEnd(const UdpBackEnd& other);
         
-        /**
-         * Send text via the UDP Socket
-         */
-        bool send( const ::std::string& text );
-        
         /* UDP Socket */
         ::net::UdpSocket m_socket; 
         

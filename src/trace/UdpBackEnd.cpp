@@ -26,7 +26,6 @@
 #include "trace/UdpBackEnd.h"
 #include "trace/entry/LogEntry.h"
 #include "net/NetTypes.h"
-#include "net/Datagram.h"
 
 #include <errno.h>
 #include <string.h>
@@ -76,18 +75,8 @@ void UdpBackEnd::onRegister( const ::sys::TPid pid )
 
 bool UdpBackEnd::add( const entry::LogEntry& entry )
 {    
-    return send( entry.toString() );
+    return m_mediator.send( entry );
 }
-
-
-bool UdpBackEnd::send( const std::string& text )
-{
-    ::net::Datagram d;
-    d.setContent( text );
- 
-    return m_mediator.send( d );    
-}
-
 
 
 void UdpBackEnd::onShutdown()
