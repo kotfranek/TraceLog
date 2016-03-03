@@ -27,24 +27,21 @@
 #define LOG_H_INTERFACE
 
 #include "trace/ILogger.h"
+#include "trace/config/IConfig.h"
 
 namespace trace
-{
-    /**
-     * TraceLog native Backends
-     */
-    enum LogBackend
-    {
-        LogBackend_Console,
-        LogBackend_File,
-        LogBackend_Udp,
-        LogBackend_Default = LogBackend_Console,    
-    };
-    
+{   
     /**
      * Retrieve the Logger Instance reference
      */
     ILogger& logInstance();
+    
+    
+    /**
+     * Get the Logger configuration
+     * @return 
+     */
+    config::IConfig& logConfig();
     
     /**
      * Get the desired LogBackend instance
@@ -57,6 +54,9 @@ namespace trace
 
 /* Globally available Logger instance */
 #define LOGGER_INSTANCE ::trace::logInstance()
+
+/* Globally available Logger Configuration */
+#define LOGGER_CONFIGURATION ::trace::logConfig()
 
 /* Backend selection. Backend has to be a global object */
 #define LOGGER_SET_BACKEND( backend ) LOGGER_INSTANCE.setBackEnd( backend )
@@ -72,6 +72,9 @@ namespace trace
 
 /* Enable the Default Backend */
 #define LOGGER_INIT_BE_DEFAULT LOGGER_INIT_BE_CONSOLE
+
+/* Configuration: Set the UDP Backend port */
+#define LOGGER_SET_UDP_PORT( port ) LOGGER_CONFIGURATION.setUdpPort( port )
 
 /* Neat log close */
 #define LOGGER_SHUTDOWN LOGGER_INSTANCE.shutDown

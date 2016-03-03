@@ -38,22 +38,36 @@
 
 namespace trace
 {
+    namespace backend
+    {
+        class ILogBackEnd;
+    };
+    
     namespace config
     {
         class IConfigProvider 
         {
-        public:
-            virtual ~IConfigProvider();
+        public:            
+            
+            /**
+             * Get the Backend instance
+             * @return ILogBackend pointer
+             */
+            virtual ::trace::backend::ILogBackEnd* getBackend() = 0;
 
             /**
              * Return the configured Server Port
              * @return Port Number
              */
-            ::net::TPort getUdpPort() const = 0;
-
+            virtual ::net::TPort getUdpPort() const = 0;                        
         protected:
-            IConfigProvider();    
-
+            IConfigProvider()
+            {                
+            }
+            
+            virtual ~IConfigProvider()
+            {                
+            }
         };
     };
 }; // namespace trace

@@ -38,6 +38,7 @@ namespace trace
         
 Logger::Logger()
     : m_mutex()
+    , m_config()
     , m_buffer()
     , m_persistThread( m_buffer )
     , m_backEnd( NULL )
@@ -118,8 +119,6 @@ void Logger::assert( const char* fileName, const uint32_t line, const char* mess
 {
     logV( LogLevel_Assert, "%s:%u-> %s", fileName, line, message );
 }
-
-
 
 
 Logger::~Logger()

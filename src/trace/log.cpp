@@ -30,7 +30,7 @@
 #include "trace/UdpBackEnd.h"
 
 namespace
-{
+{    
     /* Logger instance */
     ::trace::Logger S_LOGGER;
     
@@ -41,14 +41,20 @@ namespace
     ::trace::FileBackEnd S_BE_FILE;    
     
     /* UDP-Server backend instance */
-    ::trace::UdpBackEnd S_BE_UDP;       
+    ::trace::UdpBackEnd S_BE_UDP;     
 }
 
 namespace trace
 {
     ILogger& logInstance()
     {
-        return S_LOGGER;
+        return ::S_LOGGER;
+    }
+    
+    
+    config::IConfig& logConfig()
+    {
+        return ::S_LOGGER.getConfig();
     }
     
     
@@ -57,18 +63,18 @@ namespace trace
         switch( backEnd )
         {
             case LogBackend_Console:
-                return S_BE_CONSOLE;
+                return ::S_BE_CONSOLE;
                 
             case LogBackend_File:
-                return S_BE_FILE;
+                return ::S_BE_FILE;
                 
             case LogBackend_Udp:
-                return S_BE_UDP;
+                return ::S_BE_UDP;
                 
             default:
-                return S_BE_CONSOLE;
+                return ::S_BE_CONSOLE;
         }
         
-        return S_BE_CONSOLE;
+        return ::S_BE_CONSOLE;
     }
 };

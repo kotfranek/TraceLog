@@ -31,7 +31,7 @@
 #include "trace/LogDefines.h"
 
 namespace trace
-{       
+{           
     namespace backend
     {
         class ILogBackEnd;
@@ -79,7 +79,7 @@ namespace trace
         /**
          * Close the log, clean the resources, notify the BackEnd
          */
-        virtual void shutDown() = 0;
+        virtual void shutDown() = 0;                
 
     protected:
         ILogger()

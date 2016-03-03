@@ -37,6 +37,18 @@ namespace trace
         LogLevel_Unknown
     };
     
+    
+    /**
+     * TraceLog native Backends
+     */
+    enum LogBackend
+    {
+        LogBackend_Console,
+        LogBackend_File,
+        LogBackend_Udp,
+        LogBackend_Default = LogBackend_Console,    
+    };
+    
     /* Maximum log entry length */
     static const size_t LOG_MESSAGE_SIZE_MAX = 255U; 
 

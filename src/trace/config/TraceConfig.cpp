@@ -24,55 +24,32 @@
  */
 
 /* 
- * File:   IConfig.h
+ * File:   TraceConfig.cpp
  * Author: kret
- *
- * Created on March 1, 2016, 8:45 PM
+ * 
+ * Created on March 1, 2016, 10:27 PM
  */
 
-#ifndef ICONFIG_H
-#define ICONFIG_H
-
-#include <stdint.h>
-#include "net/NetTypes.h"
+#include "trace/config/TraceConfig.h"
 
 namespace trace
 {
-    namespace backend
-    {
-        class ILogBackEnd;
-    };
+namespace config
+{
     
-    namespace config
-    {
-        class IConfig 
-        {
-        public:            
-            
-            /**
-             * Set the backend instance
-             */
-            virtual void setBackend() = 0;
+TraceConfig::Provider::Provider()
+    : IConfigProvider()
+    , m_backend( NULL )
+    , m_port()
+{    
+}
 
-            /**
-             * Set the Server Port
-             * @arg Port Number
-             */
-            virtual void setUdpPort( const ::net::TPort port ) = 0;
+TraceConfig::TraceConfig() 
+    : IConfig()
+    , m_provider()
+{
+}
 
-        protected:
-            IConfig()
-            {                
-            }
-            
-            virtual ~IConfig()
-            {                
-            }            
-
-        };
-    };
+}; // namespace config
 }; // namespace trace
-
-
-#endif /* ICONFIG_H */
 

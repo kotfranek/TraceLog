@@ -32,6 +32,7 @@
 #include <ostream>
 #include "trace/LogDefines.h"
 #include "trace/ILogger.h"
+#include "trace/config/TraceConfig.h"
 #include "trace/entry/LogEntry.h"
 #include "trace/TraceSharedContainer.h"
 #include "trace/LogPersistThread.h"
@@ -48,6 +49,16 @@ namespace trace
     public:
         Logger();
         virtual ~Logger();
+        
+        
+        /**
+         * Expose the configuration object
+         * @return Instance reference
+         */
+        config::IConfig& getConfig()
+        {
+            return m_config;
+        }
 
     private: 
         
@@ -98,6 +109,9 @@ namespace trace
         
         /* Thread safety access mutex */
         ::std::mutex m_mutex;           
+        
+        /* Configuration */
+        config::TraceConfig m_config;
         
         /* Trace Entry buffer */
         TraceSharedContainer m_buffer;  
