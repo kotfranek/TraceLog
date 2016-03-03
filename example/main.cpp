@@ -53,6 +53,7 @@ public:
 private:    
     virtual int32_t onRun( const TStringVector& args )
     {       
+        ::printf( "TraceLog Demo\n" );
 #ifndef PERFORMANCE_TEST
         const size_t NUM_TH = 26U;
                 
@@ -67,6 +68,7 @@ private:
         if ( waitForExit( 15000U ) )
         {
             LOG_INFO_C( "Example running until end" );
+            ::printf( "\nReceived BREAK signal...\n" );            
         }
         else
         {
@@ -91,7 +93,10 @@ private:
         }
         
         LOG_INFO_C( "Took: %u ms", sw.stop() / 1000U );        
-#endif // PERFORMANCE_TEST        
+#endif // PERFORMANCE_TEST  
+        
+        ::printf( "Exit\n" );
+        
         return 0;
     }
 };
