@@ -40,44 +40,50 @@ namespace trace
         class ILogBackEnd;
     }
     
-    class TraceSharedContainer;
-
-    class LogPersistThread : public ::sys::AbstractThread
+    namespace model
     {
-    public:
-        explicit LogPersistThread( TraceSharedContainer& traceContainer );
-        ~LogPersistThread();
+        class TraceSharedContainer;
+    }
+    
+    namespace model
+    {
 
-        /**
-         * Set the LogBackEnd
-         * Call this only before the start!
-         * @arg backEnd LogBackEnd implementation
-         */
-        void setBackEnd( backend::ILogBackEnd* backEnd );
+        class LogPersistThread : public ::sys::AbstractThread
+        {
+        public:
+            explicit LogPersistThread( model::TraceSharedContainer& traceContainer );
+            ~LogPersistThread();
 
-    private:
+            /**
+             * Set the LogBackEnd
+             * Call this only before the start!
+             * @arg backEnd LogBackEnd implementation
+             */
+            void setBackEnd( backend::ILogBackEnd* backEnd );
 
-        /**
-         * @see ::sys::AbstractThread
-         */
-        virtual void run();
+        private:
 
-        /* Prohibit copying */
-        LogPersistThread(const LogPersistThread& other);
+            /**
+             * @see ::sys::AbstractThread
+             */
+            virtual void run();
 
-        /* Prohibit copying */
-        LogPersistThread& operator=(const LogPersistThread& other);  
+            /* Prohibit copying */
+            LogPersistThread(const LogPersistThread& other);
 
-        /* Trace Container instance */
-        TraceSharedContainer& m_traceContainer;
+            /* Prohibit copying */
+            LogPersistThread& operator=(const LogPersistThread& other);  
 
-        /* LogBackend implementation */
-        backend::ILogBackEnd* m_backEnd;    
+            /* Trace Container instance */
+            model::TraceSharedContainer& m_traceContainer;
 
-        /* Log Entries */
-        entry::LogEntry m_entries[ LOG_PERSIST_THREAD_CACHE ];    
+            /* LogBackend implementation */
+            backend::ILogBackEnd* m_backEnd;    
+
+            /* Log Entries */
+            entry::LogEntry m_entries[ LOG_PERSIST_THREAD_CACHE ];    
+        };
     };
-
 }; // 
 
 #endif // LOGPERSISTTHREAD_H

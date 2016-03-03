@@ -23,7 +23,7 @@
  *
  */
 
-#include "trace/TraceBuffer.h"
+#include "trace/model/TraceBuffer.h"
 #include <cstdlib>
 
 namespace
@@ -40,7 +40,8 @@ namespace
 
 namespace trace
 {
-
+namespace model
+{
 TraceBuffer::TraceBuffer()
     : m_entries()
     , m_writePtr( 0U )
@@ -112,5 +113,5 @@ TraceBuffer::~TraceBuffer()
 
 }
 
-
+}
 }; // 

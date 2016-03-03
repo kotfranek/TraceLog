@@ -23,7 +23,7 @@
  *
  */
 
-#include "trace/TraceSharedContainer.h"
+#include "trace/model/TraceSharedContainer.h"
 #include "sys/SysTypes.h"
 
 #include <iostream>
@@ -37,7 +37,8 @@ namespace
 
 namespace trace
 {
-
+namespace model
+{
 TraceSharedContainer::TraceSharedContainer()
     : m_mutex()
     , m_condDataAvail()
@@ -107,5 +108,5 @@ TraceSharedContainer::~TraceSharedContainer()
 {
 
 }
-
+}
 };

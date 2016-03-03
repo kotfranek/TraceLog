@@ -28,9 +28,9 @@
 
 #include "sys/SystemInfo.h"
 
-#include "trace/LogPersistThread.h"
+#include "trace/model/LogPersistThread.h"
+#include "trace/model/TraceSharedContainer.h"
 #include "trace/backend/ILogBackEnd.h"
-#include "trace/TraceSharedContainer.h"
 
 namespace
 {
@@ -43,8 +43,9 @@ namespace
 
 namespace trace
 {
-   
-LogPersistThread::LogPersistThread ( TraceSharedContainer& traceContainer )
+namespace model
+{   
+LogPersistThread::LogPersistThread ( model::TraceSharedContainer& traceContainer )
     : ::sys::AbstractThread( "LogPersistence" )
     , m_traceContainer( traceContainer )
     , m_backEnd( NULL )
@@ -63,7 +64,7 @@ void LogPersistThread::setBackEnd( backend::ILogBackEnd* backEnd )
 void LogPersistThread::run()
 {   
     ::esys::TString63 backendRegistered;
-    backendRegistered.c_format( "Backedn '%s' registered", m_backEnd->getName().c_str() );
+    backendRegistered.c_format( "Backend '%s' registered", m_backEnd->getName().c_str() );
     
     m_backEnd->onRegister( ::sys::SystemInfo::getOwnProcessId() );
     m_backEnd->add( entry::LogEntry( LogLevel_Internal, backendRegistered.c_str() ) );   
@@ -112,10 +113,9 @@ void LogPersistThread::run()
 }
 
 
-
 LogPersistThread::~LogPersistThread()
 {
 
 }
-
+};
 };

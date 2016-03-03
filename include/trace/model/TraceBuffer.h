@@ -31,64 +31,65 @@
 
 namespace trace
 {
+    namespace model
+    {
+        /**
+         * Trace Entry circular buffer implementation
+         * 
+         */
+        class TraceBuffer
+        {
+        public:
+            TraceBuffer();
+            ~TraceBuffer();
 
-/**
- * Trace Entry circular buffer implementation
- * 
- */
-class TraceBuffer
-{
-public:
-    TraceBuffer();
-    ~TraceBuffer();
-    
-    /**
-     * Add entry to buffer
-     * @arg entry
-     * @result true, if element was added
-     */
-    bool add( const entry::LogEntry& entry );
-    
-    
-    /**
-     * Read an entry
-     * @arg [out] entry
-     * @result true, if element was available
-     */
-    bool read( entry::LogEntry& entry );  
-    
-    
-    /**
-     * Expose the current read entry
-     * @return 
-     */
-    const entry::LogEntry& current() const;
-    
-    /**
-     * Remove one element (increments the read pointer)
-     */
-    void disposeElement();
-    
-    /**
-     * Get number of stored elements
-     */
-    size_t size() const;
+            /**
+             * Add entry to buffer
+             * @arg entry
+             * @result true, if element was added
+             */
+            bool add( const entry::LogEntry& entry );
 
-private:    
-    TraceBuffer(const TraceBuffer& other);
-    TraceBuffer& operator=(const TraceBuffer& other);
-    
-    
-    /* Log Entries */
-    entry::LogEntry m_entries[ LOG_CACHE_SIZE ]; 
-    
-    /* Write pointer */
-    size_t m_writePtr;
-    
-    /* Read pointer */
-    size_t m_readPtr;
-};
 
+            /**
+             * Read an entry
+             * @arg [out] entry
+             * @result true, if element was available
+             */
+            bool read( entry::LogEntry& entry );  
+
+
+            /**
+             * Expose the current read entry
+             * @return 
+             */
+            const entry::LogEntry& current() const;
+
+            /**
+             * Remove one element (increments the read pointer)
+             */
+            void disposeElement();
+
+            /**
+             * Get number of stored elements
+             */
+            size_t size() const;
+
+        private:    
+            TraceBuffer(const TraceBuffer& other);
+            TraceBuffer& operator=(const TraceBuffer& other);
+
+
+            /* Log Entries */
+            entry::LogEntry m_entries[ LOG_CACHE_SIZE ]; 
+
+            /* Write pointer */
+            size_t m_writePtr;
+
+            /* Read pointer */
+            size_t m_readPtr;
+        };
+    };
 }; // 
 
 #endif // TRACEBUFFER_H
