@@ -23,7 +23,7 @@
  *
  */
 
-#include "trace/model/TraceBuffer.h"
+#include "trace/model/LogBuffer.h"
 #include <cstdlib>
 
 namespace
@@ -42,7 +42,7 @@ namespace trace
 {
 namespace model
 {
-TraceBuffer::TraceBuffer()
+LogBuffer::LogBuffer()
     : m_entries()
     , m_writePtr( 0U )
     , m_readPtr( 0U )
@@ -51,7 +51,7 @@ TraceBuffer::TraceBuffer()
 }
 
 
-bool TraceBuffer::add( const entry::LogEntry& entry )
+bool LogBuffer::add( const entry::LogEntry& entry )
 {
     const size_t next = ::safeIncrement( m_writePtr );
     bool writePossible = next != m_readPtr;
@@ -66,13 +66,13 @@ bool TraceBuffer::add( const entry::LogEntry& entry )
 }
 
 
-const entry::LogEntry& TraceBuffer::current() const
+const entry::LogEntry& LogBuffer::current() const
 {
     return m_entries[ m_readPtr ];
 }
 
 
-void TraceBuffer::disposeElement()
+void LogBuffer::disposeElement()
 {
     if ( m_readPtr != m_writePtr )
     {
@@ -81,7 +81,7 @@ void TraceBuffer::disposeElement()
 }
 
 
-bool TraceBuffer::read( entry::LogEntry& entry )
+bool LogBuffer::read( entry::LogEntry& entry )
 {
     bool readPossible = m_readPtr != m_writePtr;
     
@@ -95,7 +95,7 @@ bool TraceBuffer::read( entry::LogEntry& entry )
 }
 
 
-size_t TraceBuffer::size() const
+size_t LogBuffer::size() const
 {
     ssize_t result = m_writePtr - m_readPtr;
     
@@ -108,7 +108,7 @@ size_t TraceBuffer::size() const
 
 
 
-TraceBuffer::~TraceBuffer()
+LogBuffer::~LogBuffer()
 {
 
 }

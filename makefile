@@ -29,7 +29,7 @@ SRCS_COMMON+= src/trace/entry/TraceLevelInfo.cpp
 SRCS_COMMON+= src/trace/entry/PayloadHelper.cpp
 
 SRCS = src/trace/Logger.cpp src/trace/log.cpp src/trace/ConsoleBackEnd.cpp src/trace/UdpBackEnd.cpp
-SRCS +=src/trace/FileBackEnd.cpp src/trace/model/LogPersistThread.cpp src/trace/model/TraceBuffer.cpp src/trace/model/TraceSharedContainer.cpp
+SRCS +=src/trace/FileBackEnd.cpp src/trace/model/LogPersistThread.cpp src/trace/model/LogBuffer.cpp src/trace/model/LogSharedContainer.cpp
 SRCS +=src/trace/UdpClientMediator.cpp src/trace/config/TraceConfig.cpp
 
 EXAMPLE_SRCS = example/main.cpp

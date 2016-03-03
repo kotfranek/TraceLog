@@ -29,7 +29,7 @@
 #include "sys/SystemInfo.h"
 
 #include "trace/model/LogPersistThread.h"
-#include "trace/model/TraceSharedContainer.h"
+#include "trace/model/LogSharedContainer.h"
 #include "trace/backend/ILogBackEnd.h"
 
 namespace
@@ -45,7 +45,7 @@ namespace trace
 {
 namespace model
 {   
-LogPersistThread::LogPersistThread ( model::TraceSharedContainer& traceContainer )
+LogPersistThread::LogPersistThread ( model::LogSharedContainer& traceContainer )
     : ::sys::AbstractThread( "LogPersistence" )
     , m_traceContainer( traceContainer )
     , m_backEnd( NULL )

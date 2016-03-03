@@ -23,7 +23,7 @@
  *
  */
 
-#include "trace/model/TraceSharedContainer.h"
+#include "trace/model/LogSharedContainer.h"
 #include "sys/SysTypes.h"
 
 #include <iostream>
@@ -39,7 +39,7 @@ namespace trace
 {
 namespace model
 {
-TraceSharedContainer::TraceSharedContainer()
+LogSharedContainer::LogSharedContainer()
     : m_mutex()
     , m_condDataAvail()
     , m_buffer()
@@ -48,7 +48,7 @@ TraceSharedContainer::TraceSharedContainer()
 }
 
 
-bool TraceSharedContainer::add( const entry::LogEntry& entry )
+bool LogSharedContainer::add( const entry::LogEntry& entry )
 {
     bool result = false;
     {
@@ -64,7 +64,7 @@ bool TraceSharedContainer::add( const entry::LogEntry& entry )
 }
 
 
-bool TraceSharedContainer::waitForEntries( const uint32_t timeout )
+bool LogSharedContainer::waitForEntries( const uint32_t timeout )
 {
     ::sys::TLockUnique l( m_mutex );
     
@@ -72,7 +72,7 @@ bool TraceSharedContainer::waitForEntries( const uint32_t timeout )
 }
 
 
-size_t TraceSharedContainer::getEntries( entry::LogEntry* destination, const size_t maxNumber )
+size_t LogSharedContainer::getEntries( entry::LogEntry* destination, const size_t maxNumber )
 {
     ::sys::TLockMutex l( m_mutex );
     
@@ -80,7 +80,7 @@ size_t TraceSharedContainer::getEntries( entry::LogEntry* destination, const siz
 }
 
 
-size_t TraceSharedContainer::readAllRemaining( entry::LogEntry* entryBuffer )
+size_t LogSharedContainer::readAllRemaining( entry::LogEntry* entryBuffer )
 {
     ::sys::TLockMutex l( m_mutex );
     
@@ -88,7 +88,7 @@ size_t TraceSharedContainer::readAllRemaining( entry::LogEntry* entryBuffer )
 }
 
 
-size_t TraceSharedContainer::readEntries( entry::LogEntry* entryBuffer, const size_t bufferSize )
+size_t LogSharedContainer::readEntries( entry::LogEntry* entryBuffer, const size_t bufferSize )
 {
     const size_t result = ::std::min( bufferSize, m_buffer.size() );
 
@@ -104,7 +104,7 @@ size_t TraceSharedContainer::readEntries( entry::LogEntry* entryBuffer, const si
 }
 
 
-TraceSharedContainer::~TraceSharedContainer()
+LogSharedContainer::~LogSharedContainer()
 {
 
 }

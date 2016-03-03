@@ -42,7 +42,7 @@ namespace trace
     
     namespace model
     {
-        class TraceSharedContainer;
+        class LogSharedContainer;
     }
     
     namespace model
@@ -51,7 +51,7 @@ namespace trace
         class LogPersistThread : public ::sys::AbstractThread
         {
         public:
-            explicit LogPersistThread( model::TraceSharedContainer& traceContainer );
+            explicit LogPersistThread( model::LogSharedContainer& traceContainer );
             ~LogPersistThread();
 
             /**
@@ -75,7 +75,7 @@ namespace trace
             LogPersistThread& operator=(const LogPersistThread& other);  
 
             /* Trace Container instance */
-            model::TraceSharedContainer& m_traceContainer;
+            model::LogSharedContainer& m_traceContainer;
 
             /* LogBackend implementation */
             backend::ILogBackEnd* m_backEnd;    

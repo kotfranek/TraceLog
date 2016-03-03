@@ -23,28 +23,30 @@
  *
  */
 
-#ifndef TRACEBUFFER_H
-#define TRACEBUFFER_H
+#ifndef TRACESHAREDCONTAINER_H
+#define TRACESHAREDCONTAINER_H
+
+#include <mutex>
+#include <condition_variable>
 
 #include "trace/LogDefines.h"
 #include "trace/entry/LogEntry.h"
+#include "trace/model/LogBuffer.h"
 
 namespace trace
 {
     namespace model
     {
-        /**
-         * Trace Entry circular buffer implementation
-         * 
-         */
-        class TraceBuffer
+        class LogSharedContainer
         {
         public:
-            TraceBuffer();
-            ~TraceBuffer();
+            LogSharedContainer();
+            ~LogSharedContainer();
+
 
             /**
              * Add entry to buffer
+             * Thread safe.
              * @arg entry
              * @result true, if element was added
              */
@@ -52,44 +54,51 @@ namespace trace
 
 
             /**
-             * Read an entry
-             * @arg [out] entry
-             * @result true, if element was available
+             * Consumer-Thread wait method.
+             * Wait until data is available up to given time elapses
+             * @param timeout in ms
+             * @return true, if dta can be read
              */
-            bool read( entry::LogEntry& entry );  
+            bool waitForEntries( const uint32_t timeout );
 
 
             /**
-             * Expose the current read entry
+             * Retrieve maxNumber of entries from the Buffer
+             * @param destination output buffer, must be enough for maxNumber
+             * @param maxNumber maximum amount of items
+             * @return actual copied entries count
+             */
+            size_t getEntries( entry::LogEntry* destination, const size_t maxNumber );       
+
+            /**
+             * Read all available entries.
+             * Thread safe.
+             * @param entryBuffer
              * @return 
              */
-            const entry::LogEntry& current() const;
-
-            /**
-             * Remove one element (increments the read pointer)
-             */
-            void disposeElement();
-
-            /**
-             * Get number of stored elements
-             */
-            size_t size() const;
+            size_t readAllRemaining( entry::LogEntry* entryBuffer );
 
         private:    
-            TraceBuffer(const TraceBuffer& other);
-            TraceBuffer& operator=(const TraceBuffer& other);
+            LogSharedContainer(const LogSharedContainer& other);
+            LogSharedContainer& operator=(const LogSharedContainer& other);
 
+            /**
+             * Get a number of entries
+             * @param entryBuffer
+             * @return number of elements actually read
+             */
+            size_t readEntries( entry::LogEntry* entryBuffer, const size_t bufferSize );
 
-            /* Log Entries */
-            entry::LogEntry m_entries[ LOG_CACHE_SIZE ]; 
+            /* Thread safety access mutex */
+            ::std::mutex m_mutex;
 
-            /* Write pointer */
-            size_t m_writePtr;
+            /* Data available signalling */
+            ::std::condition_variable m_condDataAvail;
 
-            /* Read pointer */
-            size_t m_readPtr;
+            /* Circular buffer */
+            LogBuffer m_buffer;
         };
-    };
-}; // 
+    }
+} // 
 
-#endif // TRACEBUFFER_H
+#endif // TRACESHAREDCONTAINER_H

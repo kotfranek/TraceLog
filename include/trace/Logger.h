@@ -34,7 +34,7 @@
 #include "trace/ILogger.h"
 #include "trace/config/TraceConfig.h"
 #include "trace/entry/LogEntry.h"
-#include "trace/model/TraceSharedContainer.h"
+#include "trace/model/LogSharedContainer.h"
 #include "trace/model/LogPersistThread.h"
 
 namespace trace
@@ -114,7 +114,7 @@ namespace trace
         config::TraceConfig m_config;
         
         /* Trace Entry buffer */
-        model::TraceSharedContainer m_buffer;  
+        model::LogSharedContainer m_buffer;  
         
         /* Log data persist thread */
         model::LogPersistThread m_persistThread;
