@@ -74,9 +74,9 @@ LOG_WARN_C( "Oops! This one does not work!" );
 ```
 
 #### Logging a message
-The TraceLog library does not require any particular initialization, if you do
+<!--The TraceLog library does not require any particular initialization, if you do
 not intend to use any other backend than console.
-It can be used immediately by invoking one of the LOG macros. For every log
+It can be used immediately by invoking one of the LOG macros.--> For every log
 severity level there is a separate macro:
 ```cpp
 LOG_INFO_C( "Information" );
