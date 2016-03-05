@@ -51,7 +51,7 @@ There are 3 available Backends: console, file and UDP server. A Backend can be
 selected using one of the macros:
 
 |Backend|Macro|Description|
-|--|--|--|
+|---|---|---|
 |Console|LOGGER_INIT_BE_CONSOLE|Standard output, all messages are written to the console|
 |File|LOGGER_INIT_BE_FILE|Output messages to a file|
 |UDP|LOGGER_INIT_BE_UDP|Output messages using lightweight UDP Server|
