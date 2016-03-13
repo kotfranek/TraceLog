@@ -1,5 +1,9 @@
 # Changelog: TraceLog
 
+### 0.3.0
+2016-03-13
+- switch to CMake
+
 ## 0.2.0
 2016-02-19
 - performance optimizations

@@ -18,20 +18,38 @@ Lightweight Logging/Tracing utility with various output Backends
 - Java UDP log-viewer available soon
 
 ## Building project
-Requires the [ESys][10] framework pre-built and `ESYS_HOME` environment variable
-set to directory containing [ESys][10].
+### Dependencies
+- Requires the [ESys][10] framework installed.
+For details refer to ESys instructions.
+- Requires the [CMake][11] installed. Minimum version required is 3.0.0.
 
-Example:
+### Building
 
-	$ ESYS_HOME="${HOME}/ESys" make
+In the project root directory execute the shell script configure.sh with root
+privileges, if you intend to install the binary output and headers:
 
-Two static libraries are created: *libtracelog.a* and *libtracecommon.a*.
-Both are necessary to use the Logger in own projects.
+```
+sudo ./configure.sh
+```
 
-- libtracecommon contains code for handling the LogEntry objects (serialize and
+This script will create a new output directory, named *build*,
+to enable an _out-of-place_ build.
+
+Two static libraries are created: *libtl.a* and *libtlcommon.a*.
+
+- **libtlcommon** contains code for handling the LogEntry objects (serialize and
 	deserialize)
-- libtracelog contains the logger implementation, including all standard
+- **libtl** contains the logger implementation, including all standard
 BackEnds
+
+If you choose to install the project, then the binaries, headers and example code will
+be copied to default directory, which, on Linux systems is normally _/usr/local/_.
+
+|Location|Content|
+|---|---|
+|/usr/local/bin|demo executables|
+|/usr/local/lib|libraries|
+|/usr/local/include/TraceLog|headers|
 
 ## Usage
 ### integration into user code
@@ -107,7 +125,7 @@ Link your binaries with the *tracelog* and *esys* static libraries.
 
 **Remark**: For the posix builds you have to link the executable with the *-pthread* flag.
 ```
-g++ example/main.o -llibtracelog -lesys -pthread -o log-demo
+g++ example/main.o -llibtl -lesys -pthread -o log-demo
 ```
 
 ## Todo
@@ -118,5 +136,6 @@ Copyright &copy; 2016 [Przemysław Podwapiński][98].<br>
 Distributed under the [Simplified BSD License][99].
 
 [10]:https://github.com/kotfranek/ESys
+[11]:https://cmake.org/
 [98]:mailto:p.podwapinski@gmail.com
 [99]:https://www.freebsd.org/copyright/freebsd-license.html
