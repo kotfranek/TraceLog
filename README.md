@@ -8,8 +8,8 @@ Lightweight Logging/Tracing utility with various output Backends
  - console
  - UDP Server
 - thread-safe implementation
+- no dynamic memory allocation
 - negligible performance impact
-- minimized heap operations
 - logging asynchronous to the caller thread
 - C printf-like syntax
 - milliseconds based timestamping
