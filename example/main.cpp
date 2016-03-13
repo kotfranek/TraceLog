@@ -53,7 +53,7 @@ public:
 private:    
     virtual int32_t onRun( const TStringVector& args )
     {       
-        ::printf( "TraceLog Demo\n" );
+        ::printf( "TraceLog Demo. Press ctrl+c to exit.\n" );
 #ifndef PERFORMANCE_TEST
         const size_t NUM_TH = 26U;
                 
