@@ -52,6 +52,8 @@ namespace trace
     backend::ILogBackEnd& logBackend( const LogBackend backEnd );
 };
 
+#if ( defined ( TRACE_ENABLED ) || defined ( LOG_ENABLED ) )
+
 /* Globally available Logger instance */
 #define LOGGER_INSTANCE ::trace::logInstance()
 
@@ -60,6 +62,42 @@ namespace trace
 
 /* Backend selection. Backend has to be a global object */
 #define LOGGER_SET_BACKEND( backend ) LOGGER_INSTANCE.setBackEnd( backend )
+
+/* Configuration: Set the UDP Backend port */
+#define LOGGER_SET_UDP_PORT( port ) LOGGER_CONFIGURATION.setUdpPort( port )
+
+/* Neat log close */
+#define LOGGER_SHUTDOWN() LOGGER_INSTANCE.shutDown()
+
+/* Basic log message macro. Preferably use the level-named macros. */
+#define LOG_MSG_C( lvl, msg, ... ) LOGGER_INSTANCE.logV( lvl, msg, ##__VA_ARGS__ )
+
+/* in case of a negative condition result log and invoke registered AbortHandler */
+#define LOG_ASSERT( condition, msg ) if ( !(condition) ) LOGGER_INSTANCE.assert( __FILE__, __LINE__, msg )
+
+#else
+
+/* Backend selection. Backend has to be a global object */
+#define LOGGER_SET_BACKEND( backend ) (void)0
+
+/* Configuration: Set the UDP Backend port */
+#define LOGGER_SET_UDP_PORT( port ) (void)0
+
+/* Neat log close */
+#define LOGGER_SHUTDOWN() (void)0
+
+/* Basic log message macro. Preferably use the level-named macros. */
+#define LOG_MSG_C( lvl, msg, ... ) (void)0
+
+/* in case of a negative condition result log and invoke registered AbortHandler */
+#define LOG_ASSERT( condition, msg ) (void)0
+
+#endif
+
+/**
+ * Here is the list of macros, that can be defined using the actual TraceLog calls
+ * or the '(void)0'.
+ */
 
 /* Enable the Console Backend */
 #define LOGGER_INIT_BE_CONSOLE LOGGER_SET_BACKEND( &::trace::logBackend( ::trace::LogBackend_Console ) )
@@ -73,28 +111,20 @@ namespace trace
 /* Enable the Default Backend */
 #define LOGGER_INIT_BE_DEFAULT LOGGER_INIT_BE_CONSOLE
 
-/* Configuration: Set the UDP Backend port */
-#define LOGGER_SET_UDP_PORT( port ) LOGGER_CONFIGURATION.setUdpPort( port )
-
-/* Neat log close */
-#define LOGGER_SHUTDOWN LOGGER_INSTANCE.shutDown
-
 /* Log with INFO level */
-#define LOG_INFO_C( msg, ... ) LOGGER_INSTANCE.logV( ::trace::LogLevel_Info, msg, ##__VA_ARGS__ )
+#define LOG_INFO_C( msg, ... ) LOG_MSG_C( ::trace::LogLevel_Info, msg, ##__VA_ARGS__ )
 
 /* Log with DEBUG level */
-#define LOG_DEBUG_C( msg, ... ) LOGGER_INSTANCE.logV( ::trace::LogLevel_Debug, msg, ##__VA_ARGS__ )
+#define LOG_DEBUG_C( msg, ... ) LOG_MSG_C( ::trace::LogLevel_Debug, msg, ##__VA_ARGS__ )
 
 /* Log with WARNING level */
-#define LOG_WARN_C( msg, ... ) LOGGER_INSTANCE.logV( ::trace::LogLevel_Warning, msg, ##__VA_ARGS__ )
+#define LOG_WARN_C( msg, ... ) LOG_MSG_C( ::trace::LogLevel_Warning, msg, ##__VA_ARGS__ )
 
 /* Log with ERROR level */
-#define LOG_ERR_C( msg, ... ) LOGGER_INSTANCE.logV( ::trace::LogLevel_Error, msg, ##__VA_ARGS__ )
+#define LOG_ERR_C( msg, ... ) LOG_MSG_C( ::trace::LogLevel_Error, msg, ##__VA_ARGS__ )
 
 /* Log with DEVELOPER level */
-#define LOG_DEV_C( msg, ... ) LOGGER_INSTANCE.logV( ::trace::LogLevel_Developer, msg, ##__VA_ARGS__ )
+#define LOG_DEV_C( msg, ... ) LOG_MSG_C( ::trace::LogLevel_Developer, msg, ##__VA_ARGS__ )
 
-/* in case of a negative condition result log and invoke registered AbortHandler */
-#define LOG_ASSERT( condition, msg ) if ( !(condition) ) LOGGER_INSTANCE.assert( __FILE__, __LINE__, msg )
 
 #endif // LOG_H_INTERFACE

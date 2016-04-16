@@ -47,6 +47,11 @@ add_executable( tl-demo
     example/main.cpp
 )
 
+# Demo application: compiler definitions
+target_compile_definitions( tl-demo
+    PUBLIC TRACE_ENABLED
+)
+
 # Demo application: required libraries
 target_link_libraries( tl-demo
     tl
