@@ -50,7 +50,7 @@ namespace trace
     };
     
     /* Maximum log entry length */
-    static const size_t LOG_MESSAGE_SIZE_MAX = 255U; 
+    static const size_t LOG_MESSAGE_SIZE_MAX = 127U; 
 
     /* Log cache size */
     static const size_t LOG_CACHE_SIZE = 512U;
