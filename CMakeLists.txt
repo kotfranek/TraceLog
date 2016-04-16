@@ -64,12 +64,25 @@ set_target_properties( tl-entry PROPERTIES COMPILE_FLAGS ${CPP_COMPILE_FLAGS} )
 set_target_properties( tl-demo PROPERTIES COMPILE_FLAGS ${CPP_COMPILE_FLAGS} )
 set_target_properties( tl-demo PROPERTIES LINK_FLAGS ${CPP_LINK_FLAGS} )
 
+# List of required headers
+set( LIST_OF_HEADERS 
+    trace/log.h
+    trace/ILogger.h
+    trace/LogDefines.h
+    trace/config/IConfig.h
+    trace/entry/Payload.h
+    trace/entry/LogEntry.h
+    trace/backend/udp/UdpBackEndControl.h
+)
+
+# Install only the required headers, keep the directory structure
+foreach ( file ${LIST_OF_HEADERS} )
+    get_filename_component( dir ${file} DIRECTORY )
+    install( FILES include/${file} DESTINATION include/${CMAKE_PROJECT_NAME}/${dir} )
+endforeach()
+
 # Target Install
 install( TARGETS tl-demo DESTINATION bin )
 install( TARGETS tl DESTINATION lib )
 install( TARGETS tlcommon DESTINATION lib )
-install( DIRECTORY 
-    include/ DESTINATION include/${CMAKE_PROJECT_NAME}
-    FILES_MATCHING PATTERN "*.h" 
-)
 
