@@ -52,6 +52,10 @@ namespace trace
     backend::ILogBackEnd& logBackend( const LogBackend backEnd );
 };
 
+/**
+ * TraceLog Implementation macros: those actually use the Logger code
+ */
+
 #if ( defined ( TRACELOG_ENABLED ) )
 
 /* Globally available Logger instance */
@@ -76,6 +80,9 @@ namespace trace
 #define LOG_ASSERT( condition, msg ) if ( !(condition) ) LOGGER_INSTANCE.assert( __FILE__, __LINE__, msg )
 
 #else
+/**
+ * TraceLog is disabled. Use the 'void' macros
+ */
 
 /* Backend selection. Backend has to be a global object */
 #define LOGGER_SET_BACKEND( backend ) (void)0
@@ -95,8 +102,8 @@ namespace trace
 #endif
 
 /**
- * Here is the list of macros, that can be defined using the actual TraceLog calls
- * or the '(void)0'.
+ * Here is the list of macros, that do implicitly depend on actual or 
+ * void macros.
  */
 
 /* Enable the Console Backend */
