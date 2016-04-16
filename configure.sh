@@ -46,8 +46,8 @@ buildProject()
 installProject()
 {
     printf "%s\n" "-- '${PRJ_NAME}' will be installed..."
-    # Install project files
-    make install
+    # Install project files, this requires Root privileges
+    sudo make install
 }
 
 # Query for installation and proceed if agreed
