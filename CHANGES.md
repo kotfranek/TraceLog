@@ -1,5 +1,12 @@
 # Changelog: TraceLog
 
+### 0.4.0
+2016-04-16
+- enable/disable logger
+- install only API headers
+- rework UDP commands
+- minor fixes
+
 ### 0.3.0
 2016-03-13
 - switch to CMake
