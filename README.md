@@ -3,35 +3,35 @@ Lightweight Logging/Tracing utility with various output Backends
 
 ## Features
 - easy integration
-- various output:
+- various output Backends:
  - file
  - console
  - UDP Server
 - thread-safe implementation
+- C printf-like syntax
 - no dynamic memory allocation
 - negligible performance impact
-- logging asynchronous to the caller thread
-- C printf-like syntax
+- asynchronous to the caller thread
 - milliseconds based timestamping
-- ready for custom output backend
-- support for the assertion mechanism with file name and line number
-- Java UDP log-viewer available soon
+- ready for custom output Backend
+- assertion mechanism with file name and line number
+- buffering in case of slow Backend or high load
+- command-line UDP client and file viewer available, check: [TraceLogViewer][11]
+- Java-based graphical interface UDP log-viewer available soon
 
 ## Building project
 ### Dependencies
 - Requires the [ESys][10] framework installed.
 For details refer to ESys instructions.
-- Requires the [CMake][11] installed. Minimum version required is 3.0.0.
+- Requires the [CMake][20] installed. Minimum version required is 3.0.0.
 
 ### Building
 
 In the project root directory execute the shell script configure.sh with root
 privileges, if you intend to install the binary output and headers:
-
 ```
 sudo ./configure.sh
 ```
-
 This script will create a new output directory, named *build*,
 to enable an _out-of-place_ build.
 
@@ -149,6 +149,7 @@ Copyright &copy; 2016 [Przemysław Podwapiński][98].<br>
 Distributed under the [Simplified BSD License][99].
 
 [10]:https://github.com/kotfranek/ESys
-[11]:https://cmake.org/
+[11]:https://github.com/kotfranek/TraceLogViewer
+[20]:https://cmake.org/
 [98]:mailto:p.podwapinski@gmail.com
 [99]:https://www.freebsd.org/copyright/freebsd-license.html
