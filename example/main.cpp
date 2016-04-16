@@ -104,7 +104,7 @@ private:
 
 int32_t main( int argc, const char * const * argv )
 {
-    LOGGER_INIT_BE_UDP;
+    LOGGER_INIT_BE_UDP();
     
     LOG_INFO_C( "App Started: %c", 'a' );
     int32_t result = ::DemoApp().run( argc, argv );

@@ -100,13 +100,13 @@ namespace trace
  */
 
 /* Enable the Console Backend */
-#define LOGGER_INIT_BE_CONSOLE LOGGER_SET_BACKEND( &::trace::logBackend( ::trace::LogBackend_Console ) )
+#define LOGGER_INIT_BE_CONSOLE( ) LOGGER_SET_BACKEND( &::trace::logBackend( ::trace::LogBackend_Console ) )
 
 /* Enable the File Backend */
-#define LOGGER_INIT_BE_FILE LOGGER_SET_BACKEND( &::trace::logBackend( ::trace::LogBackend_File ) )
+#define LOGGER_INIT_BE_FILE( ) LOGGER_SET_BACKEND( &::trace::logBackend( ::trace::LogBackend_File ) )
 
 /* Enable the UDP Server Backend */
-#define LOGGER_INIT_BE_UDP LOGGER_SET_BACKEND( &::trace::logBackend( ::trace::LogBackend_Udp ) )
+#define LOGGER_INIT_BE_UDP( ) LOGGER_SET_BACKEND( &::trace::logBackend( ::trace::LogBackend_Udp ) )
 
 /* Enable the Default Backend */
 #define LOGGER_INIT_BE_DEFAULT LOGGER_INIT_BE_CONSOLE

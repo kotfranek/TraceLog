@@ -90,7 +90,7 @@ selected using one of the macros:
 
 ```cpp
 /* Set the UDP Server as a backend */
-LOGGER_INIT_BE_UDP;
+LOGGER_INIT_BE_UDP();
 
 /* This message will be sent using UDP */
 LOG_INFO_C( "Using UDP Backend" );
@@ -98,7 +98,7 @@ LOG_INFO_C( "Using UDP Backend" );
 /* Shutdown the logger. No more messages will be accepted.
  * This call is not obligatory, as the logger will shut down on process exit.
  */
-LOGGER_SHUTDOWN;
+LOGGER_SHUTDOWN();
 
 /* This message will not be logged! */
 LOG_WARN_C( "Oops! This one does not work!" );
