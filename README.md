@@ -52,7 +52,20 @@ be copied to default directory, which, on Linux systems is normally _/usr/local/
 |/usr/local/include/TraceLog|headers|
 
 ## Usage
-### integration into user code
+### Integration into user code
+All Tracelog operations are done using the macro statements.
+
+#### Enabling and disabling the logger
+The TraceLog is, by default, disabled. The statements produce no code.
+
+To enable the logger a special macro has to be defined. It is preferred to use
+the global macro definitions, i.e. using compiler directives (-D).
+```
+-DTRACELOG_ENABLE
+```
+Disabling the 'TRACELOG_ENABLE' macro will cause _no logger-call code_ being
+compiled and all macros will have no effect.
+
 #### Required headers
 Only one header file has to be included. It contains all required TraceLog
 definitions and macros.

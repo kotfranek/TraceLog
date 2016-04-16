@@ -52,7 +52,7 @@ namespace trace
     backend::ILogBackEnd& logBackend( const LogBackend backEnd );
 };
 
-#if ( defined ( TRACE_ENABLED ) || defined ( LOG_ENABLED ) )
+#if ( defined ( TRACELOG_ENABLED ) )
 
 /* Globally available Logger instance */
 #define LOGGER_INSTANCE ::trace::logInstance()

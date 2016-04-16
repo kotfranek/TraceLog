@@ -49,7 +49,7 @@ add_executable( tl-demo
 
 # Demo application: compiler definitions
 target_compile_definitions( tl-demo
-    PUBLIC TRACE_ENABLED
+    PUBLIC TRACELOG_ENABLED
 )
 
 # Demo application: required libraries
