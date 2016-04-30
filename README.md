@@ -13,6 +13,7 @@ Lightweight Logging/Tracing utility with various output Backends
 - negligible performance impact
 - asynchronous to the caller thread
 - milliseconds based timestamping
+- single macro to disable all TraceLog calls in production
 - ready for custom output Backend
 - assertion mechanism with file name and line number
 - buffering in case of slow Backend or high load
